@@ -1,0 +1,2 @@
+Branch o nazwie "test-Linux" to branch na którym są te same pliki źródłowe .cpp, ale inne plik .json utworzone z użyciem WSL.
+Jak narazie na Linuxie skutecznie skompilowałem tylko zadanie1/sort.cpp
