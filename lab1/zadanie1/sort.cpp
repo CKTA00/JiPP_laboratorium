@@ -26,5 +26,6 @@ int main(int argc, char *argv[])
     {
         cout << tab[i] << " ";
     }
+    cout << endl;
 }
 
