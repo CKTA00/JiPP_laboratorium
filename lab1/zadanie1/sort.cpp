@@ -8,7 +8,6 @@ int main(int argc, char *argv[])
     int *tab = new int[argc-1]; 
     for (int i = 0; i < argc-1; i++) tab[i] = atoi(argv[i+1]);
 
-
     // Sortowanie przez wybieranie.
     for (int i = argc-2; i > 0; i--)
     {

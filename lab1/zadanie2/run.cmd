@@ -1,0 +1,1 @@
+g++ palindrom.cpp -o palindrom.exe

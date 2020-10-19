@@ -1,0 +1,1 @@
+g++ bmi.cpp -o bmi.exe

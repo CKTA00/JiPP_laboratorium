@@ -46,7 +46,8 @@ int main(int argc, char *argv[])
     }
 
     cout << "Liczby " << a << " i " << b;
-    if(suma_dodatnich_dzielnikow(a)==b+1 && suma_dodatnich_dzielnikow(b)==a+1) cout << " sa skojarzone."<<endl;
+    if(suma_dodatnich_dzielnikow(a)==b+1 && suma_dodatnich_dzielnikow(b)==a+1) 
+        cout << " sa skojarzone."<<endl;
     else  cout << " nie sa skojarzone."<<endl;
 }
 
