@@ -3,16 +3,17 @@
 
 using namespace std;
 
-void swaper(int *a, int *b)
+template<typename T> void swaper(T *a, T *b)
 {
-    int temp = *a;
-        *a = *b;
-        *b = temp;
+    T temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 int main(int argc, char *argv[])
 {
     int a=0,b=0;
+    float af,bf;
     string a_s, b_s;
 
     // input:
@@ -37,10 +38,13 @@ int main(int argc, char *argv[])
 
     a = stoi(a_s);
     b = stoi(b_s);
-
-    // testy?
+    af = (float)a;
+    bf = (float)b;
     cout << "Before swaping: (a,b) = (" << a << "," << b << ")" << endl;   
     swaper(&a,&b);
-    cout << "After swaping: (a,b) = (" << a << "," << b << ")" << endl; 
+    cout << "After swaping: (a,b) = (" << a << "," << b << ")" << endl;
+    cout << "Before swaping: (af,bf) = (" << af << "," << bf << ")" << endl;   
+    swaper(&af,&bf);
+    cout << "After swaping: (af,bf) = (" << af << "," << bf << ")" << endl;
     return 0;
 }

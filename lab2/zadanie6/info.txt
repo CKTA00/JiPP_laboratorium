@@ -1,0 +1,1 @@
+Zadanie 6 nie posiada jasnego polecenia. Domyślam się, że powinniśmy napisać funkcje która zamienia dane w jakiś inny sposób nie wykorzystując przypisania czy zmiennej temp, ale nie mam pojęcia jak.
