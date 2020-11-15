@@ -1,24 +1,30 @@
-#include "macierz.cpp"
+#include "matrix.cpp"
 
-#define PATH "C:\\pliki"
-// katalog C:\pliki musi istniec, funkcja store nie tworzy folderow
+#define PATH "C:\\pliki\\"
+// Katalog C:\pliki musi istniec, funkcja Matrix::store nie tworzy folderow
+// Funkcja Matrix::store nie dodaje do sciezki '\' ani '/'. Prosze uwzglednic ten znak w tym makrze.
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     Matrix m1(4,5);
-    cout << "Macierz m1 zaraz po wykonaniu konstruktora:\n";
+    cout << "Macierz m1 zaraz po wykonaniu konstruktora:" << endl;
     m1.print();
     m1.set(1,1,3);
     m1.set(1,2,4);
     m1.set(3,3,3.14);
-    m1.set(99,44,5); //proba zapisania do niestniejacej komorki, zostanie wypisany blad
-    cout << "Element macierzy m1 o wspolrzednych [3,3] rowna sie " << m1.get(3,3) << endl;
-    cout << "Macierz m1 ma " << m1.rows() << " wierszy i " << m1.cols() << " kolumn." << endl;
-    cout << "Element macierzy m1 o wspolrzednych [50,50] rowna sie " << m1.get(50,50) << endl;
+    
+    
     cout << "Macierz m1 po ustawieniu paru danych:\n";
     m1.print();
+    cout << "Element macierzy m1 o wspolrzednych [3,3] rowna sie " << m1.get(3,3) << endl;
+    cout << "Macierz m1 ma " << m1.rows() << " wierszy i " << m1.cols() << " kolumn." << endl;
+    cout << "Proba zapisania do niestniejacej komorki, zostanie wypisany blad:"<<endl;
+    m1.set(99,44,5); 
+    cout << "Proba odczytania niestniejacej komorki, zostanie wypisany blad:"<<endl;
+    cout << "Element macierzy m1 o wspolrzednych [50,50] rowna sie " << m1.get(50,50) << endl << endl;
+    
 
     string filename, fullpath;
     cout << "Plik zostanie zapisany w folderze " << PATH << " o ile istnieje." << endl;
@@ -31,51 +37,82 @@ int main(int argc, char *argv[])
     fullpath.append(filename);
     Matrix m1_b(fullpath);
     m1_b.print();
-    cout << "Tworzenie dwoch macierzy, wypelnienie danymi i wypisanie: " << endl;
-    Matrix m2_a(2);
-    Matrix m2_b(2,3);
+    cout << endl;
+
+
+    cout << "Tworzenie dwoch macierzy A i B oraz wypelnienie danymi: " << endl;
+    Matrix m2_a(4);
+    Matrix m2_b(4,6);
+
     m2_a.set(0,0,1);
     m2_a.set(0,1,2);
+    m2_a.set(0,2,1);
+    m2_a.set(0,3,2);
     m2_a.set(1,0,3);
     m2_a.set(1,1,4);
+    cout << "A:" << endl;
     m2_a.print();
+
     m2_b.set(0,0,1);
     m2_b.set(0,1,1);
     m2_b.set(0,2,1);
-    m2_b.set(1,0,100);
-    m2_b.set(1,1,100);
-    m2_b.set(1,2,100);
+    m2_b.set(0,3,1);
+    m2_b.set(0,4,1);
+    m2_b.set(0,5,1);
+    m2_b.set(1,0,2);
+    m2_b.set(1,1,2);
+    m2_b.set(1,2,2);
+    m2_b.set(1,3,2);
+    m2_b.set(2,0,-2);
+    m2_b.set(3,1,3);
+    cout << "B:" << endl;
     m2_b.print();
-    cout << "Wynik mnozenia pierwszej przez droga: " << endl;
-    Matrix *wynik = m2_a.multiply(m2_b);    //obliczy m2_a x m2_b
-    if(wynik != NULL) wynik->print();       //wypisze wynik
-    cout << "Proba pomnozenia drugiej przez pierwsza: " << endl;
-    wynik = m2_b.multiply(m2_a);            //wypisze informacje o blednych danych i zwroci NULL
-    if(wynik != NULL) wynik->print();       //warunek nie zostanie spelniony
+
     cout << "Proba dodania macierzy o roznych wielkosciach: " << endl;
-    wynik = m2_b.add(m2_a);                 //wypisze informacje o blednych danych i zwroci NULL
-    if(wynik != NULL) wynik->print();       //warunek nie zostanie spelniony
+    Matrix * wynik = m2_b.add(m2_a);                                //wypisze informacje o blednych danych i zwroci macierz domyślną
+    wynik->print();                                                 //wypisze macierz domyślną [0]
+    delete wynik;
+    wynik = NULL;
+    cout << "Wynik mnozenia A x B: " << endl;
+    wynik = m2_a.multiply(m2_b);                        
+    wynik->print();                                     
+    delete wynik;
+    wynik = NULL;
+    
+    cout << "Proba pomnozenia B x A: " << endl;
+    wynik = m2_b.multiply(m2_a);                    //wypisze informacje o blednych danych i zwroci macierz domyślną
+    wynik->print();                                 //warunek macierz domyślną [0]
+    delete wynik;
+    wynik = NULL;
+    
     cout << "Proba odejmowania macierzy o roznych wielkosciach: " << endl;
-    wynik = m2_b.subtract(m2_a);            //wypisze informacje o blednych danych i zwroci NULL
-    if(wynik != NULL) wynik->print();       //warunek nie zostanie spelniony
+    wynik = m2_b.subtract(m2_a);                    //wypisze informacje o blednych danych i zwroci macierz domyślną
+    wynik->print();                                 //wypisze macierz domyślną [0]
+    delete wynik;
+    wynik = NULL;
+
+
+
     cout << "Otwieranie przykladowych danych..." << endl;
-    Matrix m3_a("macierz_a.txt"), m3_b("macierz_b.txt");    //otwarcie przykladowych danych z folderu w ktorym jest aplikacja
-    cout << "Macierz A:" << endl;
-    m3_a.print();
-    cout << "Macierz B:" << endl;
-    m3_b.print();
+    Matrix m3_c("macierz_c.txt"), m3_d("macierz_d.txt");    //niepowodzenie konczy dzialanie programu
+    cout << "Macierz C:" << endl;
+    m3_c.print();
+    cout << "Macierz D:" << endl;
+    m3_d.print();
     Matrix *suma, *roznica;
-
-    cout << "Macierz A+B:" << endl;
-    suma = m3_a.add(m3_b);
+    cout << "Macierz C+D:" << endl;
+    suma = m3_c.add(m3_d);
     suma->print();
-    cout << "Macierz B-A:" << endl;
-    roznica = m3_b.subtract(m3_a);
+    delete suma;
+    suma = NULL;
+    cout << "Macierz D-C:" << endl;
+    roznica = m3_d.subtract(m3_c);
     roznica->print();
-    cout << "Macierz A-B:" << endl;
-    roznica = m3_a.subtract(m3_b);
+    delete roznica;
+    suma = NULL;
+    cout << "Macierz C-D:" << endl;
+    roznica = m3_c.subtract(m3_d);
     roznica->print();
-
-    //wynik->print();
-
+    delete roznica;
+    roznica = NULL;
 }
