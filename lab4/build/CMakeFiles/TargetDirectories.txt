@@ -1,3 +1,0 @@
-/mnt/c/Users/chick/projects/JiPP_laboratorium/lab4/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/chick/projects/JiPP_laboratorium/lab4/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/chick/projects/JiPP_laboratorium/lab4/build/CMakeFiles/test.dir
