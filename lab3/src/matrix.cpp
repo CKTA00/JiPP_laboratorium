@@ -1,5 +1,4 @@
-#include "matrix.hpp"
-#include <iostream>
+#include "matrix.h"
 #define W 5
 
 using namespace std;
@@ -30,9 +29,9 @@ Matrix::~Matrix()
 {
     for(int i = 0; i<r; i++)
     {
-        free(data[i]);
+        delete data[i];
     }
-    free(data);
+    delete data;
 }
 
 void Matrix::set(int n, int m, double val)
@@ -55,7 +54,7 @@ double Matrix::get(int n,int m)
     return data[n][m];
 }
 
-Matrix* Matrix::add(Matrix m2)
+Matrix* Matrix::add(Matrix &m2)
 {
     if(rows()!=m2.rows()||cols()!=m2.cols())
     {
@@ -76,7 +75,7 @@ Matrix* Matrix::add(Matrix m2)
     return ret;  
 }
 
-Matrix* Matrix::subtract(Matrix m2)
+Matrix* Matrix::subtract(Matrix &m2)
 {
     if(rows()!=m2.rows()||cols()!=m2.cols())
     {
@@ -97,7 +96,7 @@ Matrix* Matrix::subtract(Matrix m2)
     return ret;  
 }
 
-Matrix* Matrix::multiply(Matrix m2)
+Matrix* Matrix::multiply(Matrix &m2)
 {
     if(cols()!=m2.rows())
     {
@@ -106,7 +105,7 @@ Matrix* Matrix::multiply(Matrix m2)
         cout << "(!) Zwrocono macierz [0]" << endl;
         return new Matrix(1);
     }
-    Matrix *ret = new Matrix(rows(),m2.cols());
+    Matrix* ret = new Matrix(rows(),m2.cols());
     double sum;
     int c2 = m2.cols();
     for(int row = 0; row<r; row++)
@@ -134,17 +133,19 @@ int Matrix::rows()
 
 void Matrix::print()
 {
-    cout << (char)218 << setw(W*c+1) << setfill(' ') << (char)191 << endl;
+    // zakomentowane linie dzialaly mi tylko na windowsie wiec postanowilem je zakomentowac
+    //cout << (char)218 << setw(W*c+1) << setfill(' ') << (char)191 << endl;
     for(int i = 0; i<r; i++)//rows
     {
-        cout << (char)179;
+        //cout << (char)179;
         for(int j = 0; j<c; j++)//columns
         {
             cout << setw(W) << data[i][j];
         }
-        cout << (char)179 << endl;
+        //cout << (char)179;
+        cout << endl;
     }
-    cout << (char)192 << setfill(' ') << setw(W*c+1) << (char)217 << endl;
+    //cout << (char)192 << setfill(' ') << setw(W*c+1) << (char)217 << endl;
 }
 
 void Matrix::store(string filename, string path)

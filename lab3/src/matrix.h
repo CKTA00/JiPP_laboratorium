@@ -15,9 +15,9 @@ public:
     ~Matrix();
     void set(int n, int m, double val);
     double get(int n,int m);
-    Matrix* add(Matrix m2);
-    Matrix* subtract(Matrix m2);
-    Matrix* multiply(Matrix m2);
+    Matrix* add(Matrix &m2);
+    Matrix* subtract(Matrix &m2);
+    Matrix* multiply(Matrix &m2);
     int cols();
     int rows();
     void print();
