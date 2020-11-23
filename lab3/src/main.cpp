@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     mat_a.set(0,3,2);
     mat_a.set(1,0,3);
     mat_a.set(1,1,4);
-    Matrix mat_b("macierz_b.txt"), mat_c("macierz_c.txt"), mat_d("macierz_d.txt"); //niepowodzenie konczy dzialanie programu
+    Matrix mat_b("../tests/macierz_b.txt"), mat_c("../tests/macierz_c.txt"), mat_d("../tests/macierz_d.txt"); //niepowodzenie konczy dzialanie programu
     cout << "Macierz A:" << endl;
     mat_a.print();
     cout << "Macierz B:" << endl;
