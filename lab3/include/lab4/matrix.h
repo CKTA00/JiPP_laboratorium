@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <matrix_exceptions.h>
 
 class Matrix
 {

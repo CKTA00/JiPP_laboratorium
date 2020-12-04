@@ -1,4 +1,5 @@
-#include "matrix.h"
+#include <matrix.h>
+
 
 // PROGRAM ZOSTAL NAPISANY POD LINUX (PISALEM UZYWAJAC WSL)
 #define PATH "../tests/" // zakladajac ze plik wykonywalny znajduje sie w folderze build (lub jakimkolwiek jednym folderze w katalogu lab4)
@@ -21,10 +22,27 @@ int main(int argc, char *argv[])
 
     // test obslugi bledow:
     cout << "Macierz mat ma " << mat1.rows() << " wierszy i " << mat1.cols() << " kolumn." << endl << endl;
-    cout << "Proba zapisania do niestniejacej komorki, zostanie wypisany blad:"<<endl;
-    mat1.set(99,44,5); 
+    cout << "Proba zapisania do niestniejacej komorki:"<<endl;
+    try
+    {
+        mat1.set(99,44,5);
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << '\n';
+    }
+    
+ 
     cout << "Proba odczytania niestniejacej komorki, zostanie wypisany blad:"<<endl;
-    cout << "Element macierzy mat o wspolrzednych [50,50] rowna sie " << mat1.get(50,50) << endl << endl;
+    try
+    {
+        cout << "Element macierzy mat o wspolrzednych [50,50] rowna sie " << mat1.get(50,50) << endl << endl;
+    }
+    catch(const exception &e)
+    {
+        cerr << e.what() << '\n';
+    }
+    
     
     // test obsulgi plikow:
     cout << endl << "TEST OBSLUGI PLIKOW:" << endl << endl;
@@ -32,7 +50,16 @@ int main(int argc, char *argv[])
     cout << "Plik zostanie zapisany w folderze " << PATH << " o ile istnieje." << endl;
     cout << "Podaj nazwe pliku: ";
     cin >> filename;
-    mat1.store(filename,PATH);
+    try
+    {
+        mat1.store(filename,PATH);
+    }
+    catch(FileFailedToOpenException &fe)
+    {
+        cerr << fe.getpath() << fe.what() << "\n";
+        exit(1);
+    }
+
     cout << "Plik ten zostanie teraz otwarty i wypisany..." << endl;
     fullpath = PATH;
     fullpath.append(filename);
@@ -96,22 +123,45 @@ int main(int argc, char *argv[])
     cout << endl << "TEST ZACHOWANIA FUNKCJI DODAWANIA, ODEJMOWANIA I MNOZENIA PO PODANIU BLEDNYCH DANYCH:" << endl << endl;
 
     cout << "Proba dodania macierzy o roznych wielkosciach (A+B): " << endl;
-    Matrix * bad1 = mat_a.add(mat_b);                            //wypisze informacje o blednych danych i zwroci macierz domyślną
-    bad1->print();                                             //wypisze macierz domyślną [0]
-    delete bad1;
-    bad1 = nullptr;
+    try
+    {
+        Matrix * bad1 = mat_a.add(mat_b);                            //wypisze informacje o blednych danych i zwroci macierz domyślną
+        bad1->print();                                             //wypisze macierz domyślną [0]
+        delete bad1;
+        bad1 = nullptr;
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << '\n';
+    }
+    
 
     cout << "Proba odejmowania macierzy o roznych wielkosciach (A-B): " << endl;
-    Matrix * bad2 = mat_a.subtract(mat_b);                      //wypisze informacje o blednych danych i zwroci macierz domyślną
-    bad2->print();                                           //wypisze macierz domyślną [0]
-    delete bad2;
-    bad2 = nullptr;
-
+    try
+    {
+        Matrix * bad2 = mat_a.subtract(mat_b);                      //wypisze informacje o blednych danych i zwroci macierz domyślną
+        bad2->print();                                           //wypisze macierz domyślną [0]
+        delete bad2;
+        bad2 = nullptr;
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << '\n';
+    }
+    
+    
     cout << "Proba pomnozenia B x A (zamiast A x B): " << endl;
-    Matrix * bad3 = mat_b.multiply(mat_a);                      //wypisze informacje o blednych danych i zwroci macierz domyślną
-    bad3->print();                                            //warunek macierz domyślną [0]
-    delete bad3;
-    bad3 = nullptr;
+    try
+    {
+        Matrix * bad3 = mat_b.multiply(mat_a);                     
+        bad3->print();                                           
+        delete bad3;
+        bad3 = nullptr;
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << '\n';
+    }
     
 
 

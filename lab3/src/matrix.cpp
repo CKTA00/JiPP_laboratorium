@@ -1,4 +1,5 @@
 #include <matrix.h>
+
 #define W 5
 
 using namespace std;
@@ -36,33 +37,19 @@ Matrix::~Matrix()
 
 void Matrix::set(int n, int m, double val)
 {
-    if(n<0||n>=rows()||m<0||m>=cols())
-    {
-        cout << "(!) Element ("<<n<<","<<m<<") nie istnieje w tej macierzy." << endl;
-        return;
-    }
+    if(n<0||n>=rows()||m<0||m>=cols()) throw invalid_argument("Nie istnieje taki element!");
     data[n][m] = val;
 }
 
 double Matrix::get(int n,int m)
 {
-    if(n<0||n>=rows()||m<0||m>=cols())
-    {
-        cout << "(!) Element ("<<n<<","<<m<<") nie istnieje w tej macierzy. Zwrocono 0." << endl;
-        return 0.0f;
-    }
+    if(n<0||n>=rows()||m<0||m>=cols()) throw invalid_argument("Nie istnieje taki element!");
     return data[n][m];
 }
 
 Matrix* Matrix::add(Matrix &m2)
 {
-    if(rows()!=m2.rows()||cols()!=m2.cols())
-    {
-        cout << "(!) Macierze maja rozny rozmiar. Nie mozna ich dodac." << endl;
-        cout << "(!) (w:"<<rows()<<", k:"<<cols()<<") != (w:"<<m2.rows()<<", k:"<<m2.cols()<<")" << endl;
-        cout << "(!) Zwrocono macierz [0]" << endl;
-        return new Matrix(1);
-    }
+    if(rows()!=m2.rows()||cols()!=m2.cols()) throw DiffrentSizesOfMatricesException();
     Matrix *ret = new Matrix(rows(),cols());
     double temp;
     for(int i = 0; i<r; i++)
@@ -77,13 +64,7 @@ Matrix* Matrix::add(Matrix &m2)
 
 Matrix* Matrix::subtract(Matrix &m2)
 {
-    if(rows()!=m2.rows()||cols()!=m2.cols())
-    {
-        cout << "(!) Macierze maja rozny rozmiar. Nie mozna ich odjac." << endl;
-        cout << "(!) (w:"<<rows()<<", k:"<<cols()<<") != (w:"<<m2.rows()<<", k:"<<m2.cols()<<")" << endl;
-        cout << "(!) Zwrocono macierz [0]" << endl;
-        return new Matrix(1);
-    }
+    if(rows()!=m2.rows()||cols()!=m2.cols()) throw DiffrentSizesOfMatricesException();
     Matrix *ret = new Matrix(rows(),cols());
     double temp;
     for(int i = 0; i<r; i++)
@@ -98,13 +79,7 @@ Matrix* Matrix::subtract(Matrix &m2)
 
 Matrix* Matrix::multiply(Matrix &m2)
 {
-    if(cols()!=m2.rows())
-    {
-        cout << "(!) Liczba kolumn pierwszej macierzy nie rowna sie liczbie wierszy w macierzy drugiej. Nie mozna wykonac mnozenia."<<endl;
-        cout << "(!) " << cols() << " != " << m2.rows() << endl;
-        cout << "(!) Zwrocono macierz [0]" << endl;
-        return new Matrix(1);
-    }
+    if(cols()!=m2.rows()) throw CannotMultiplyException();
     Matrix* ret = new Matrix(rows(),m2.cols());
     double sum;
     int c2 = m2.cols();
@@ -153,11 +128,8 @@ void Matrix::store(string filename, string path)
     fstream file;
     path.append(filename);
     file.open(path, ios::out);
-    if(!file)
-    {
-        cout << "(!) Nie mozna utworzyc pliku " << path << endl;
-        return;
-    }
+    if(!file) throw FileFailedToOpenException(path);
+        //cout << "(!) Nie mozna utworzyc pliku " << path << endl;
     file << r << ' ' << c << "\n";
     for(int i = 0; i<r; i++)//rows
     {
@@ -184,6 +156,7 @@ Matrix::Matrix(string path)
     if(r<=0 || c<=0)
     {
         cout << "(!) Plik " << path << " zawiera niepoprawne dane." << endl;
+        cout << "(!) Przerywanie pracy programu." << endl;
         file.close();
         exit(-12);
     }
