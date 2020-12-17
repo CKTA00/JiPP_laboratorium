@@ -34,12 +34,12 @@ int Employee::printData()
 }*/
 
 
-void Employee::printTab()
+void Employee::printRow()
 {
-    cout << setw(12) << name << " | " << setw(12) << surname << " | " << setw(12) << position << " | ";
+    cout << "|"<<setw(12) << name << " | " << setw(12) << surname << " | " << setw(12) << position << " | ";
 }
 ////
-const string Employee::tabHeader = " Name        | Surname      | Position     | ";
+const string Employee::tabHeader = "| Name        | Surname      | Position     | ";
 
 /*
 Employee::Employee(string name, string surname, string position)

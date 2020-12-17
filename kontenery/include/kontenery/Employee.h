@@ -17,6 +17,6 @@ class Employee
     void setData(string name, string surname, string position);
     //int printData();
     const static string tabHeader;
-    void printTab();
+    void printRow();
     //Employee(string name, string surname, string position);
 };

@@ -1,5 +1,6 @@
 #include <vector>
 #include <map>
+#include <algorithm>
 #include <Employee.h>
 using namespace std;
 
@@ -9,6 +10,10 @@ class HRMS
     map<string,string> IDtoDepID;
     map<string,double> IDtoSalary;
 
+    bool static empEarnMore(pair<string, double>& emp, pair<string, double>& than);
+    //bool empEarnMore(Employee& emp, Employee& than);
+    // Czy 'emp' zarabia więcej niż 'than'
+
     public:
     HRMS();
     void add(Employee employee, std::string departmentId, double salary);
@@ -16,4 +21,5 @@ class HRMS
     void changeSalary(std::string employeeId, double salary);
     void printSalaries();
     void printSalariesSorted(); //std::algorithm
+
 };
