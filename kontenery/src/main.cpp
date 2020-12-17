@@ -12,4 +12,6 @@ int main()
     baza.printSalaries();
     baza.changeSalary("2",6400.0);
     baza.printSalaries();
+    baza.printSalariesSorted();
+    baza.printSalaries();
 }

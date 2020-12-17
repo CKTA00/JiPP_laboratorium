@@ -7,8 +7,8 @@ using namespace std;
 class HRMS
 {
     vector<Employee> employees;
-    map<string,string> IDtoDepID;
-    map<string,double> IDtoSalary;
+    map<string,string> idToDepID;
+    vector<pair<string,double>> idToSalary;
 
     bool static empEarnMore(pair<string, double>& emp, pair<string, double>& than);
     //bool empEarnMore(Employee& emp, Employee& than);

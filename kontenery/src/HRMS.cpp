@@ -8,14 +8,22 @@ HRMS::HRMS()
 void HRMS::add(Employee employee, string departmentId, double salary)
 {
     employees.push_back(employee);
-    IDtoSalary.insert(pair<string, double>(employee.getid(), salary));
-    IDtoDepID.insert(pair<string, string>(employee.getid(), departmentId));
+    //idToSalary.insert(pair<string, double>(employee.getid(), salary));
+    idToSalary.push_back(make_pair(employee.getid(),salary));
+    idToDepID.insert(pair<string, string>(employee.getid(), departmentId));
 }
 
 void HRMS::changeSalary(string employeeId, double salary)
 {
-    //IDtoSalary.find(employeeId);
-    IDtoSalary[employeeId]=salary;
+    for(vector<pair<string,double>>::iterator it = idToSalary.begin(); it<idToSalary.end(); it++)
+    {
+        if(it->first == employeeId)
+        {
+            it->second = salary;
+            break;
+        }
+    }
+    //idToSalary[employeeId]=salary;
 }
 
 void HRMS::printDepartment(string departmentId)
@@ -25,7 +33,7 @@ void HRMS::printDepartment(string departmentId)
     for(vector<Employee>::iterator it = employees.begin(); it != employees.end(); it++)
     {
         //if(it->getdepid()==departmentId) //mapowanie nie jest potrzebne kiedy mamy pole deartmentID w klasie Employee
-        if(IDtoDepID[it->getid()]==departmentId) // ale skoro jest to go użyjmy
+        if(idToDepID[it->getid()]==departmentId) // ale skoro jest to go użyjmy
         {
             it->printRow();
             cout << endl;
@@ -40,15 +48,20 @@ void HRMS::printDepartment(string departmentId)
 void HRMS::printSalaries()
 {
     cout << " ALL SALARIES:" << endl;
-    cout << Employee::tabHeader << "Salary   |" << endl;
+    cout << Employee::tabHeader << " Salary   |" << endl;
+    int l = employees.size();
+    for(int i = 0; i<l;i++)
+    {
+        employees[i].printRow();
+        cout << setw(9) << idToSalary[i].second << " |" << endl;
+    }
+    /*
     for(vector<Employee>::iterator it = employees.begin(); it != employees.end(); it++)
     {
-        //int w = 45;
-        //w -= it->printData();
-        // cout << string(w, ' ') << "| " << IDtoSalary[it->getid()] << endl;
         it->printRow();
-        cout << setw(8) << IDtoSalary[it->getid()] << " |" << endl;
-    }
+        //cout << setw(9) << IDtoSalary[it->getid()] << " |" << endl;
+        cout << setw(9) << it. << " |" << endl; 
+    }*/
 }
 
 bool HRMS::empEarnMore(pair<string, double>& emp, pair<string, double>& than)
@@ -64,15 +77,19 @@ bool HRMS::empEarnMore(pair<string, double>& emp, pair<string, double>& than)
 void HRMS::printSalariesSorted()
 {
     cout << " ALL SALARIES SORTED:" << endl;
-    cout << Employee::tabHeader << "| Salary   " << endl;
+    cout << "| Salary    " << Employee::tabHeader <<  endl;
     //sort(employees.begin(),employees.end(),HRMS::empEarnMore); // nie da się tym sposobem
 
     //sort(IDtoSalary.begin(),IDtoSalary.end());
     //sort(IDtoSalary.begin(),IDtoSalary.end(),empEarnMore);
     //reverse(IDtoSalary.begin(),IDtoSalary.end());
+
+    sort(idToSalary.begin(), idToSalary.end(), empEarnMore);
     
-    for(map<string,double>::iterator it = IDtoSalary.begin(); it != IDtoSalary.end(); it++)
+    for(vector<pair<string,double>>::iterator it = idToSalary.begin(); it != idToSalary.end(); it++)
     {
-        cout << "|" << setw(10) << it->second;
+        cout << "|" << setw(10) << " " << it->second;
+
+        cout << endl;
     }
 }
