@@ -26,26 +26,10 @@ void Employee::setData(string name, string surname, string position)
     this->position = position;
 }
 
-/*
-int Employee::printData()
-{
-    cout << name << " " << surname << " (" << position << ")";
-    return name.length() + surname.length() + position.length() + 4;
-}*/
-
-
 void Employee::printRow()
 {
     cout << "|"<<setw(12) << name << " | " << setw(12) << surname << " | " << setw(12) << position << " | ";
 }
 ////
-const string Employee::tabHeader = "| Name        | Surname      | Position     | ";
-
-/*
-Employee::Employee(string name, string surname, string position)
-{
-    this->id = new_id;
-    this->name = name;
-    this->surname = surname;
-    this->position = position;
-}*/
+const string Employee::tabHeader = "| Name        | Surname      | Position     |";
+// stała używana jako część nagłówka pasująca do wypisania przez printRow()
