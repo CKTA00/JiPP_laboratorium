@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <list>
 #include <matrix_exceptions.h>
 
 class Matrix
@@ -9,19 +10,41 @@ class Matrix
 private:
     double** data;
     int c,r;
+
 public:
+
+    //konstruktory i detruktor
     Matrix(int rows, int cols);
     Matrix(int size);
     Matrix(std::string path);
+    Matrix(const Matrix &m);
     ~Matrix();
+
+    //operacje na pojedyńczej komórce
     void set(int n, int m, double val);
     double get(int n,int m);
-    Matrix* add(Matrix &m2);
-    Matrix* subtract(Matrix &m2);
-    Matrix* multiply(Matrix &m2);
+
+    //ilości kolumn i wierszy
     int cols();
     int rows();
+
+    //działania matematyczne na macierzy
+    Matrix add(Matrix &m2);
+    Matrix subtract(Matrix &m2);
+    Matrix multiply(Matrix &m2);
+
+    //działania matematyczne na macierzy (opertaory)
+    Matrix operator+(Matrix &m2);
+    Matrix operator-(Matrix &m2);
+    Matrix operator*(Matrix &m2);
+
+    // wypisywanie, zapisywanie
     void print();
     void store(std::string filename, std::string path);
+    friend ostream& operator<<(ostream& ostr, const Matrix& mat);
+
+    //pozostałe operatory
+    bool operator==(Matrix &m2);
+    std::list<double> operator[](int row);
 };
 

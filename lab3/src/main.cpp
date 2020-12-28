@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 int main(int argc, char *argv[])
 {
     // test konstruktora Matrix(int,int) oraz funkcji set(), get(), rows(), cols() i print():
@@ -19,9 +20,9 @@ int main(int argc, char *argv[])
     cout << "Macierz mat po ustawieniu paru danych:\n";
     mat1.print();
     cout << "Element macierzy mat o wspolrzednych [3,3] rowna sie " << mat1.get(3,3) << endl;
+    cout << "Macierz mat ma " << mat1.rows() << " wierszy i " << mat1.cols() << " kolumn." << endl << endl;
 
     // test obslugi bledow:
-    cout << "Macierz mat ma " << mat1.rows() << " wierszy i " << mat1.cols() << " kolumn." << endl << endl;
     cout << "Proba zapisania do niestniejacej komorki:"<<endl;
     try
     {
@@ -32,7 +33,6 @@ int main(int argc, char *argv[])
         cerr << e.what() << '\n';
     }
     
- 
     cout << "Proba odczytania niestniejacej komorki, zostanie wypisany blad:"<<endl;
     try
     {
@@ -65,12 +65,11 @@ int main(int argc, char *argv[])
     fullpath.append(filename);
     Matrix mat2(fullpath);
     mat2.print();
+    if(mat1==mat2) cout << "Zapisana macierz i odczytana macierz są identyczne." << endl;      
     cout << endl;
-
 
     cout << "Tworzenie dwoch macierzy A i B oraz wypelnienie danymi: " << endl;
     // test konstruktora Matrix(int)
-
     Matrix mat_a(4);
     mat_a.set(0,0,1);
     mat_a.set(0,1,2);
@@ -88,36 +87,47 @@ int main(int argc, char *argv[])
     cout << "Macierz D:" << endl;
     mat_d.print();
 
-
-    // test mnozenia:
-    cout << "Wynik mnozenia A x B: " << endl;
-    Matrix * iloczyn = mat_a.multiply(mat_b);                 
-    iloczyn->print();                                     
-    delete iloczyn;
-    iloczyn = nullptr;
-
-    
-
-    // test dodawania i odejmowania:
+                           
+    // test dodawania, odejmowania i mnozenia:
     cout << endl << "TEST FUNKCJI DODAWANIA, ODEJMOWANIA I MNOZENIA:" << endl << endl;
-    Matrix *suma, *roznica_a, *roznica_b;
+
     cout << "Macierz C+D:" << endl;
-    suma = mat_c.add(mat_d);
-    suma->print();
-    delete suma;
-    suma = nullptr;
+    //Matrix suma = mat_c.add(mat_d);
+    Matrix suma = mat_c + mat_d;
+    suma.print();
 
     cout << "Macierz D-C:" << endl;
-    roznica_a = mat_d.subtract(mat_c);
-    roznica_a->print();
-    delete roznica_a;
-    roznica_a = nullptr;
+    //Matrix roznica = mat_d.subtract(mat_c);
+    Matrix roznica = mat_d - mat_c;
+    roznica.print();
 
     cout << "Macierz C-D:" << endl;
-    roznica_b = mat_c.subtract(mat_d);
-    roznica_b->print();
-    delete roznica_b;
-    roznica_b = nullptr;
+    //Matrix roznica2 = mat_c.subtract(mat_d);
+    Matrix roznica2 = mat_c - mat_d;
+    roznica2.print();
+
+    cout << "Wynik mnozenia A*B:" << endl;
+    //Matrix iloczyn = mat_a.multiply(mat_b);
+    Matrix iloczyn = mat_a * mat_b;                    
+    iloczyn.print();
+
+    cout << endl << "Wynik mnozenia zostanie teraz zapisany do pilku " << PATH << "iloczyn.txt" << endl;
+    string path = PATH;
+    path.append("iloczyn.txt");
+
+    fstream zapis;
+    zapis.open(path, ios::out);
+    zapis << iloczyn;
+    zapis.close();
+
+    cout << "Zapis udany!" << endl << "Wynik mnozenia zostanie teraz odczytany z tego piku:" << endl;
+
+    Matrix odczytana(path);
+    cout << odczytana << endl;
+
+    if(odczytana==iloczyn) cout << "Macierze A*B oraz odczytana są identyczne" << endl;
+    else cout << "Cos poszło nie tak! Macierze A*B oraz odczytana są różne" << endl;    
+
 
     // Test obslugi bledow:
     cout << endl << "TEST ZACHOWANIA FUNKCJI DODAWANIA, ODEJMOWANIA I MNOZENIA PO PODANIU BLEDNYCH DANYCH:" << endl << endl;
@@ -125,44 +135,33 @@ int main(int argc, char *argv[])
     cout << "Proba dodania macierzy o roznych wielkosciach (A+B): " << endl;
     try
     {
-        Matrix * bad1 = mat_a.add(mat_b);                            //wypisze informacje o blednych danych i zwroci macierz domyślną
-        bad1->print();                                             //wypisze macierz domyślną [0]
-        delete bad1;
-        bad1 = nullptr;
+        Matrix bad = mat_a.add(mat_b);
+        bad.print();
     }
     catch(const exception& e)
     {
         cerr << e.what() << '\n';
     }
-    
 
     cout << "Proba odejmowania macierzy o roznych wielkosciach (A-B): " << endl;
     try
     {
-        Matrix * bad2 = mat_a.subtract(mat_b);                      //wypisze informacje o blednych danych i zwroci macierz domyślną
-        bad2->print();                                           //wypisze macierz domyślną [0]
-        delete bad2;
-        bad2 = nullptr;
+        Matrix bad2 = mat_a.subtract(mat_b);
+        bad2.print();
     }
     catch(const exception& e)
     {
         cerr << e.what() << '\n';
     }
-    
     
     cout << "Proba pomnozenia B x A (zamiast A x B): " << endl;
     try
     {
-        Matrix * bad3 = mat_b.multiply(mat_a);                     
-        bad3->print();                                           
-        delete bad3;
-        bad3 = nullptr;
+        Matrix bad3 = mat_b.multiply(mat_a);
+        bad3.print();
     }
     catch(const exception& e)
     {
         cerr << e.what() << '\n';
     }
-    
-
-
 }

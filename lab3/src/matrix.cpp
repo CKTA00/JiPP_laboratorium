@@ -3,6 +3,21 @@
 #define W 5
 
 using namespace std;
+
+Matrix::Matrix(const Matrix &m)
+{
+    r = m.r;
+    c = m.c;
+    cout << "---kopiowanie---\n";
+    data = new double*[r];
+    for(int i = 0; i<r; i++)
+    {
+        data[i] = new double[c];
+        for(int j = 0; j<c; j++)
+            data[i][j] = m.data[i][j];
+    }
+}
+
 Matrix::Matrix(int rows, int cols)
 {
     if(rows<1||cols<1)
@@ -47,40 +62,50 @@ double Matrix::get(int n,int m)
     return data[n][m];
 }
 
-Matrix* Matrix::add(Matrix &m2)
+Matrix Matrix::add(Matrix &m2)
 {
     if(rows()!=m2.rows()||cols()!=m2.cols()) throw DiffrentSizesOfMatricesException();
-    Matrix *ret = new Matrix(rows(),cols());
+    Matrix ret = Matrix(rows(),cols());
     double temp;
     for(int i = 0; i<r; i++)
         for(int j = 0; j<c; j++)
         {
             temp = data[i][j];
             temp += m2.get(i,j); 
-            ret->set(i,j,temp);
+            ret.set(i,j,temp);
         }
     return ret;  
 }
 
-Matrix* Matrix::subtract(Matrix &m2)
+Matrix Matrix::operator+(Matrix &m2)
+{
+    return add(m2);
+}
+
+Matrix Matrix::subtract(Matrix &m2)
 {
     if(rows()!=m2.rows()||cols()!=m2.cols()) throw DiffrentSizesOfMatricesException();
-    Matrix *ret = new Matrix(rows(),cols());
+    Matrix ret = Matrix(rows(),cols());
     double temp;
     for(int i = 0; i<r; i++)
         for(int j = 0; j<c; j++)
         {
             temp = data[i][j];
             temp -= m2.get(i,j); 
-            ret->set(i,j,temp);
+            ret.set(i,j,temp);
         }
     return ret;  
 }
 
-Matrix* Matrix::multiply(Matrix &m2)
+Matrix Matrix::operator-(Matrix &m2)
+{
+    return subtract(m2);
+}
+
+Matrix Matrix::multiply(Matrix &m2)
 {
     if(cols()!=m2.rows()) throw CannotMultiplyException();
-    Matrix* ret = new Matrix(rows(),m2.cols());
+    Matrix ret = Matrix(rows(),m2.cols());
     double sum;
     int c2 = m2.cols();
     for(int row = 0; row<r; row++)
@@ -91,9 +116,37 @@ Matrix* Matrix::multiply(Matrix &m2)
             {
                 sum += data[row][i]*m2.get(i,col);
             }
-            ret->set(row,col,sum);
+            ret.set(row,col,sum);
         }
     return ret;  
+}
+
+Matrix Matrix::operator*(Matrix &m2)
+{
+    return multiply(m2);
+}
+
+bool Matrix::operator==(Matrix &m2)
+{
+    if(r==m2.rows()&&c==m2.cols())
+    {
+        for(int i = 0; i<r; ++i)
+        {
+            for(int j = 0; j<c; ++j) if(data[i][j]!=m2.data[i][j]) return false;
+            return true;
+        }
+    }
+    return false;
+}
+
+list<double> Matrix::operator[](int row)
+{
+    list<double> ret;
+    for(int j = 0; j<c; ++j)
+    {
+        ret.push_back(data[row][j]);
+    }
+    return ret;
 }
 
 int Matrix::cols()
@@ -179,4 +232,18 @@ Matrix::Matrix(string path)
     }
     cout << "(i) Plik odczytano pomyslnie.\n";
     file.close();
+}
+
+ostream& operator<<(ostream& ostr, const Matrix& mat)
+{
+    ostr << mat.r << ' ' << mat.c << "\n";
+    for(int i = 0; i<mat.r; i++)//rows
+    {
+        for(int j = 0; j<mat.c; j++)//columns
+        {
+            ostr << mat.data[i][j] << ' ';
+        }
+        ostr << "\n";
+    }
+    return ostr;
 }
