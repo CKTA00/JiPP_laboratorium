@@ -126,7 +126,14 @@ int main(int argc, char *argv[])
     cout << odczytana << endl;
 
     if(odczytana==iloczyn) cout << "Macierze A*B oraz odczytana są identyczne" << endl;
-    else cout << "Cos poszło nie tak! Macierze A*B oraz odczytana są różne" << endl;    
+    else cout << "Cos poszło nie tak! Macierze A*B oraz odczytana są różne" << endl; 
+
+    cout << "Teraz zostanie utworzona lista z drugiego wiersza macierzy odczytanej:" << endl;
+    list<double> lista = odczytana[1];
+    for(list<double>::iterator it = lista.begin();it!=lista.end();it++)
+    {
+        cout << setw(5) <<*it;
+    }
 
 
     // Test obslugi bledow:
