@@ -1,0 +1,1 @@
+.\build\Debug\lab8.exe

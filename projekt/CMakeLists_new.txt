@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 2.6.2)
+project( kalkulator_macierzy )
+
+# Location where cmake first looks for cmake modules.
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+
+
+include( "${wxWidgets_USE_FILE}" )
+
+# For convenience we define the sources as a variable. You can add 
+# header files and cpp/c files and CMake will sort them out
+set(SRCS app.cpp)
+
+# If we build for windows systems, we also include the resource file
+# containing the manifest, icon and other resources
+if(WIN32)
+  set(SRCS ${SRCS} minimal.rc)
+endif(WIN32)
+
+# Here we define the executable minimal.exe or minimal on other systems
+# the above paths and defines will be used in this build
+add_executable(app WIN32 ${SRCS})
+
+
+target_link_libraries(app ${wxWidgets_LIBRARIES})
