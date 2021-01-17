@@ -50,6 +50,21 @@ Matrix::~Matrix()
     delete data;
 }
 
+Matrix& Matrix::operator=(const Matrix &m2)
+{
+    if(this == &m2) return *this; // czy nie doszło do samoprzypisania
+    r = m2.r;
+    c = m2.c;
+    data = new double*[r];
+    for(int i = 0; i<r; i++)
+    {
+        data[i] = new double[c];
+        for(int j = 0; j<c; j++)
+            data[i][j] = m2.data[i][j];
+    }
+    return *this;
+}
+
 void Matrix::set(int n, int m, double val)
 {
     if(n<0||n>=rows()||m<0||m>=cols()) throw invalid_argument("Nie istnieje taki element!");

@@ -20,6 +20,8 @@ public:
     Matrix(const Matrix &m);
     ~Matrix();
 
+    Matrix& operator=(const Matrix &m2); //operator kopiujący
+
     //operacje na pojedyńczej komórce
     void set(int n, int m, double val);
     double get(int n,int m);

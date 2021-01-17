@@ -8,7 +8,7 @@ Matrix::Matrix(const Matrix &m)
 {
     r = m.r;
     c = m.c;
-    cout << "---kopiowanie---\n";
+    //cout << "---kopiowanie---\n";
     data = new double*[r];
     for(int i = 0; i<r; i++)
     {
@@ -22,8 +22,8 @@ Matrix::Matrix(int rows, int cols)
 {
     if(rows<1||cols<1)
     {
-        cout << "(!) Nieprawidlowa wartosc wierszy lub kolumn w czasie wykonywania konstruktora."<< endl;
-        cout << "(!) Przerywanie pracy programu." << endl;
+        //cout << "(!) Nieprawidlowa wartosc wierszy lub kolumn w czasie wykonywania konstruktora."<< endl;
+        //cout << "(!) Przerywanie pracy programu." << endl;
         exit(-1);
     }
     
@@ -48,6 +48,21 @@ Matrix::~Matrix()
         delete data[i];
     }
     delete data;
+}
+
+Matrix& Matrix::operator=(const Matrix &m2)
+{
+    if(this == &m2) return *this; // czy nie doszło do samoprzypisania
+    r = m2.r;
+    c = m2.c;
+    data = new double*[r];
+    for(int i = 0; i<r; i++)
+    {
+        data[i] = new double[c];
+        for(int j = 0; j<c; j++)
+            data[i][j] = m2.data[i][j];
+    }
+    return *this;
 }
 
 void Matrix::set(int n, int m, double val)
@@ -124,6 +139,25 @@ Matrix Matrix::multiply(Matrix &m2)
 Matrix Matrix::operator*(Matrix &m2)
 {
     return multiply(m2);
+}
+
+Matrix Matrix::transpose()
+{
+    Matrix ret = Matrix(cols(),rows());
+    for(int i = 0; i<r; i++)
+        for(int j = 0; j<c; j++)
+        {
+            try
+            {
+                ret.set(j,i,data[i][j]);
+            }
+            catch(const exception& e)
+            {
+                throw e;
+            }
+        }
+    
+    return ret;
 }
 
 bool Matrix::operator==(Matrix &m2)

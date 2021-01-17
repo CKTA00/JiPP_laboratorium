@@ -1,5 +1,5 @@
-#include <iostream>
 #include <exception>
+#include <string>
 using namespace std;
 
 class FileFailedToOpenException : public exception

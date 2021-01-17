@@ -20,6 +20,8 @@ public:
     Matrix(const Matrix &m);
     ~Matrix();
 
+    Matrix& operator=(const Matrix &m2); //operator kopiujący
+
     //operacje na pojedyńczej komórce
     void set(int n, int m, double val);
     double get(int n,int m);
@@ -32,6 +34,7 @@ public:
     Matrix add(Matrix &m2);
     Matrix subtract(Matrix &m2);
     Matrix multiply(Matrix &m2);
+    Matrix transpose();
 
     //działania matematyczne na macierzy (opertaory)
     Matrix operator+(Matrix &m2);
