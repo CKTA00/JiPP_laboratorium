@@ -52,7 +52,12 @@ enum
     ID_Subtract,
     ID_Subtract_alt,
     ID_Multiply,
-    ID_Multiply_alt
+    ID_Multiply_alt,
+    ID_AddBT,
+    ID_SubtractBT,
+    ID_Subtract_altBT,
+    ID_MultiplyBT,
+    ID_Multiply_altBT
 };
 
 #endif

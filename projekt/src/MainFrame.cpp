@@ -1,6 +1,5 @@
 ﻿#include <MainFrame.h>
 
-
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_OpenA,          MainFrame::OnOpenFile)
     EVT_MENU(ID_OpenB,          MainFrame::OnOpenFile)
@@ -17,6 +16,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_ABOUT,        MainFrame::OnAbout)
 wxEND_EVENT_TABLE()
 
+
+//UIMatrix::OnTextEnter
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
         : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
@@ -24,7 +25,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     //  ogólne własności okna
     // =======================
 
-    SetMinSize(wxSize(300, 250));
+    SetMinSize(wxSize(300, 400));
     CreateStatusBar();
     SetStatusText("gotowość");
     wxPanel *mainPanel = new wxPanel(this);
@@ -33,7 +34,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     // =====================
     //  pasek menu na górze
     // =====================
-
+    
     // menu Plik
     wxMenu *menuFile = new wxMenu;
         wxMenu *submenuOpen = new wxMenu;
@@ -83,12 +84,13 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxPanel *workspacePanel = new wxPanel(mainPanel);
     wxGridSizer *workspaceLayout = new wxGridSizer(1,2,0,0);
     //wxBoxSizer *workspaceLayout = new wxBoxSizer(wxHORIZONTAL);
-    ui_a = new UIMatrix(workspacePanel,&a_mat);
+    ui_a = new UIMatrix(workspacePanel,&a_mat,1);
+    ui_b = new UIMatrix(workspacePanel,&b_mat,2);
     workspaceLayout->Add(ui_a->getMainPanel(),1,wxEXPAND|wxALL,5);
-    ui_b = new UIMatrix(workspacePanel,&b_mat);
     workspaceLayout->Add(ui_b->getMainPanel(),1,wxEXPAND|wxALL,5);
-    workspacePanel->SetSizer(workspaceLayout);
     workspaceLayout->Layout();
+    workspacePanel->SetSizer(workspaceLayout);
+    
 
     // ==================
     //  Panel przycisków
@@ -97,11 +99,11 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxPanel *buttonPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition);
     wxBoxSizer *buttonLayout = new wxBoxSizer(wxHORIZONTAL);
     
-    wxButton *addBTN = new wxButton(buttonPanel,ID_Add,"A + B",wxDefaultPosition,wxSize(50,50));
-    wxButton *subtractBTN = new wxButton(buttonPanel,ID_Subtract,"A - B",wxDefaultPosition,wxSize(50,50));
-    wxButton *subtractBTN_alt = new wxButton(buttonPanel,ID_Subtract_alt,"B - A",wxDefaultPosition,wxSize(50,50));
-    wxButton *multiplyBTN = new wxButton(buttonPanel,ID_Multiply,"A x B",wxDefaultPosition,wxSize(50,50));
-    wxButton *multiplyBTN_alt = new wxButton(buttonPanel,ID_Multiply_alt,"B x A",wxDefaultPosition,wxSize(50,50));
+    wxButton *addBTN = new wxButton(buttonPanel,ID_AddBT,"A + B",wxDefaultPosition,wxSize(50,50));
+    wxButton *subtractBTN = new wxButton(buttonPanel,ID_SubtractBT,"A - B",wxDefaultPosition,wxSize(50,50));
+    wxButton *subtractBTN_alt = new wxButton(buttonPanel,ID_Subtract_altBT,"B - A",wxDefaultPosition,wxSize(50,50));
+    wxButton *multiplyBTN = new wxButton(buttonPanel,ID_MultiplyBT,"A x B",wxDefaultPosition,wxSize(50,50));
+    wxButton *multiplyBTN_alt = new wxButton(buttonPanel,ID_Multiply_altBT,"B x A",wxDefaultPosition,wxSize(50,50));
     buttonLayout->Add(addBTN,0,0);
     buttonLayout->Add(subtractBTN,0,0);
     buttonLayout->Add(subtractBTN_alt,0,0);
@@ -118,6 +120,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     mainLayout->Add(buttonPanel,0,wxALL,5);
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();
+    SendSizeEvent();
 }
 
 void MainFrame::OnOpenFile(wxCommandEvent& event)
