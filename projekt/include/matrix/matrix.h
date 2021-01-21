@@ -29,6 +29,7 @@ public:
     //ilości kolumn i wierszy
     int cols();
     int rows();
+    bool displayable();
 
     //działania matematyczne na macierzy
     Matrix add(Matrix &m2);

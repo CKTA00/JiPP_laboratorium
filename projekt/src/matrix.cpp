@@ -193,6 +193,11 @@ int Matrix::rows()
     return r;
 }
 
+bool Matrix::displayable()
+{
+    return (c<=5 && r<=5);
+}
+
 void Matrix::print()
 {
     // zakomentowane linie dzialaly mi tylko na windowsie wiec postanowilem je zakomentowac
