@@ -173,15 +173,6 @@ bool Matrix::operator==(Matrix &m2)
     return false;
 }
 
-list<double> Matrix::operator[](int row)
-{
-    list<double> ret;
-    for(int j = 0; j<c; ++j)
-    {
-        ret.push_back(data[row][j]);
-    }
-    return ret;
-}
 
 int Matrix::cols()
 {

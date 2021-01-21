@@ -1,11 +1,15 @@
 ﻿#include <wx/wxprec.h>
 #include <wx/filedlg.h>
-//#include <matrix.h>
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+
+#include <matrix.h>
 #include <ResultFrame.h>
-//#include <UIMatrix.h>
+#include <UIMatrix.h>
+
+#ifndef MAIN_FRAME_H
+#define MAIN_FRAME_H
 
 class MainFrame: public wxFrame
 {
@@ -16,6 +20,8 @@ public:
     Matrix b_mat = Matrix(5);
     Matrix result = Matrix(5);
 
+    UIMatrix *ui_a;
+    UIMatrix *ui_b;
     //wxTextCtrl **ui_a;
     //wxTextCtrl **ui_b;
 private:
@@ -49,3 +55,4 @@ enum
     ID_Multiply_alt
 };
 
+#endif

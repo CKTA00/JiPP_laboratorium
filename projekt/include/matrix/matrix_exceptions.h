@@ -2,6 +2,9 @@
 #include <string>
 using namespace std;
 
+#ifndef MATRIX_EXCP_H
+#define MATRIX_EXCP_H
+
 class FileFailedToOpenException : public exception
 {
     string path;
@@ -20,3 +23,5 @@ class CannotMultiplyException : public exception
 {
     virtual const char *what() const throw();
 };
+
+#endif

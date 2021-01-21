@@ -24,9 +24,11 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     //  ogólne własności okna
     // =======================
 
-    SetMinSize(wxSize(600, 250));
+    SetMinSize(wxSize(300, 250));
     CreateStatusBar();
     SetStatusText("gotowość");
+    wxPanel *mainPanel = new wxPanel(this);
+    wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
 
     // =====================
     //  pasek menu na górze
@@ -74,11 +76,48 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     menuBar->Append( menuHelp, "P&omoc" );
     SetMenuBar( menuBar );
 
-    // ====================
-    //  Przestrzeń robocza
-    // ====================
+    // =================
+    //  Panele macierzy
+    // =================
     
-    // Panel macierzy A
+    wxPanel *workspacePanel = new wxPanel(mainPanel);
+    wxGridSizer *workspaceLayout = new wxGridSizer(1,2,0,0);
+    //wxBoxSizer *workspaceLayout = new wxBoxSizer(wxHORIZONTAL);
+    ui_a = new UIMatrix(workspacePanel,&a_mat);
+    workspaceLayout->Add(ui_a->getMainPanel(),1,wxEXPAND|wxALL,5);
+    ui_b = new UIMatrix(workspacePanel,&b_mat);
+    workspaceLayout->Add(ui_b->getMainPanel(),1,wxEXPAND|wxALL,5);
+    workspacePanel->SetSizer(workspaceLayout);
+    workspaceLayout->Layout();
+
+    // ==================
+    //  Panel przycisków
+    // ==================
+
+    wxPanel *buttonPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition);
+    wxBoxSizer *buttonLayout = new wxBoxSizer(wxHORIZONTAL);
+    
+    wxButton *addBTN = new wxButton(buttonPanel,ID_Add,"A + B",wxDefaultPosition,wxSize(50,50));
+    wxButton *subtractBTN = new wxButton(buttonPanel,ID_Subtract,"A - B",wxDefaultPosition,wxSize(50,50));
+    wxButton *subtractBTN_alt = new wxButton(buttonPanel,ID_Subtract_alt,"B - A",wxDefaultPosition,wxSize(50,50));
+    wxButton *multiplyBTN = new wxButton(buttonPanel,ID_Multiply,"A x B",wxDefaultPosition,wxSize(50,50));
+    wxButton *multiplyBTN_alt = new wxButton(buttonPanel,ID_Multiply_alt,"B x A",wxDefaultPosition,wxSize(50,50));
+    buttonLayout->Add(addBTN,0,0);
+    buttonLayout->Add(subtractBTN,0,0);
+    buttonLayout->Add(subtractBTN_alt,0,0);
+    buttonLayout->Add(multiplyBTN,0,0);
+    buttonLayout->Add(multiplyBTN_alt,0,0);
+    buttonPanel->SetSizer(buttonLayout);
+    buttonLayout->Layout();
+
+    // =================================
+    //  rozmieszczenie na głównym oknie
+    // =================================
+    
+    mainLayout->Add(workspacePanel,1,wxEXPAND|wxALL,5);
+    mainLayout->Add(buttonPanel,0,wxALL,5);
+    mainPanel->SetSizer(mainLayout);
+    mainLayout->Layout();
 }
 
 void MainFrame::OnOpenFile(wxCommandEvent& event)
@@ -91,12 +130,16 @@ void MainFrame::OnOpenFile(wxCommandEvent& event)
     if(path.IsEmpty())
     {
         wxMessageBox("Nie wskazano pliku do otwarcia.","Niepowodzenie otwarcia",wxOK | wxICON_ASTERISK);
+        event.Skip();
+        return;
     }
 
     if(event.GetId()==ID_OpenA){
         a_mat = Matrix(path.ToStdString());
+        ui_a->refresh();
     }else{
         b_mat = Matrix(path.ToStdString());
+        ui_b->refresh();
     }
     event.Skip();
 }
@@ -111,6 +154,8 @@ void MainFrame::OnSaveFile(wxCommandEvent& event)
     if(filename.IsEmpty())
     {
         wxMessageBox("Nie nazwano pliku.","Niepowodzenie zapisu",wxOK | wxICON_ASTERISK);
+        event.Skip();
+        return;
     }
 
     if(event.GetId()==ID_SaveA){
@@ -132,6 +177,7 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz A",wxOK | wxICON_ERROR);
             a_mat = Matrix(5,5);
         }
+        ui_a->refresh();
     }
     else
     {
@@ -142,6 +188,7 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz B",wxOK | wxICON_ERROR);
             b_mat = Matrix(5,5);
         }
+        ui_b->refresh();
     }
     event.Skip();
 }
@@ -150,6 +197,7 @@ void MainFrame::OnOperation(wxCommandEvent& event)
 {
     if(a_good && b_good)
     {
+        
         int id = event.GetId();
         try
         {
@@ -167,6 +215,8 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         catch(exception &e)
         {
             wxMessageBox(nd,e.what(),wxOK | wxICON_INFORMATION);
+            event.Skip();
+            return;
         }
         
         ResultFrame* rf = new ResultFrame(this, "Mini Kalkulator Macierzy", wxPoint(50, 50), wxSize(450, 250),result,a_mat,b_mat);
@@ -186,6 +236,8 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         {
             wxMessageBox(nd,"Macierz A jest pusta.",wxOK | wxICON_INFORMATION);
         }
+        event.Skip();
+        return;
     }
     event.Skip();
 }

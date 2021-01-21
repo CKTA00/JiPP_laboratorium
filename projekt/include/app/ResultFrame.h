@@ -5,6 +5,9 @@
     #include <wx/wx.h>
 #endif
 
+#ifndef RESULT_FRAME_H
+#define RESULT_FRAME_H
+
 class ResultFrame: public wxFrame
 {
     wxTextCtrl **ui_matrix;
@@ -26,3 +29,5 @@ enum
     ID_ReplaceA,
     ID_ReplaceB,
 };
+
+#endif

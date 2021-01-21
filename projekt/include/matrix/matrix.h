@@ -5,14 +5,18 @@
 #include <list>
 #include <matrix_exceptions.h>
 
+#ifndef MATRIX_H
+#define MATRIX_H
+
 class Matrix
 {
 private:
-    double** data;
+    
     int c,r;
+    double** data;
 
 public:
-
+    
     //konstruktory i detruktor
     Matrix(int rows, int cols);
     Matrix(int size);
@@ -25,6 +29,7 @@ public:
     //operacje na pojedyńczej komórce
     void set(int n, int m, double val);
     double get(int n,int m);
+    friend double* get_ptr(Matrix *mat,int n,int m);
 
     //ilości kolumn i wierszy
     int cols();
@@ -49,6 +54,7 @@ public:
 
     //pozostałe operatory
     bool operator==(Matrix &m2);
-    std::list<double> operator[](int row);
 };
+
+#endif
 
