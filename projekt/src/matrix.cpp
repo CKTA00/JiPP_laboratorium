@@ -189,6 +189,34 @@ bool Matrix::displayable()
     return (c<=5 && r<=5);
 }
 
+void Matrix::resize(int n, int m)
+{
+    // r,c - w starej macierzy
+    // n,m - w nowej macierzy
+    //if(this == &m2) return *this; // czy nie doszło do samoprzypisania
+    double** newdata = new double*[n];
+    for(int i = 0; i<n; i++)
+    {
+        newdata[i] = new double[m];
+        for(int j = 0; j<m; j++)
+        {
+            if(i<r && j<c)
+                newdata[i][j] = data[i][j];
+            else
+                newdata[i][j] = 0.0;
+        }
+    }
+
+    for(int i = 0; i<r; i++)
+    {
+        delete data[i];
+    }
+    delete data;
+    data = newdata;
+    r=n;
+    c=m;
+}
+
 void Matrix::print()
 {
     // zakomentowane linie dzialaly mi tylko na windowsie wiec postanowilem je zakomentowac

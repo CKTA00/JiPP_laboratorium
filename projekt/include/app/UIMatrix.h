@@ -4,6 +4,7 @@
     #include <wx/wx.h>
 #endif
 #include <wx/valnum.h>
+#include <wx/listbox.h>
 #include <matrix.h>
 
 #ifndef UI_MATRIX_H
@@ -15,10 +16,15 @@ class UIMatrix
     wxPanel *mainPanel;
     //wxTextCtrl *nameTC;
     wxTextCtrl **textControls;
+    wxComboBox *rowsCB, *colsCB;
     wxStaticText *infoT;
+    wxArrayString sizeList;
+
     // wskaźnik na dane z MainFrame'a:
     Matrix *mat;
     //wxString name;
+
+    //pozostałe informacje
     int precision;
     int idSpace;
     
@@ -31,6 +37,7 @@ public:
     void refresh(wxString inf); 
     void setPrecision(int prec);
     void OnTextChange(wxCommandEvent& event);
+    void OnSizeChange(wxCommandEvent& event);
 
     //nazwa
     //void setName(wxString name);
@@ -40,7 +47,9 @@ public:
 enum
 {
     ID_NameTC = 500,
-    ID_InfoT
+    ID_InfoT,
+    ID_RowsCB,
+    ID_ColsCB
 };
 
 

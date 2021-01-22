@@ -33,10 +33,11 @@ public:
     double get(int n,int m);
     friend double* get_ptr(Matrix *mat,int n,int m);
 
-    //ilości kolumn i wierszy
+    //funkcje dotyczące ilości kolumn i wierszy
     int cols();
     int rows();
     bool displayable();
+    void resize(int n, int m);
 
     //działania matematyczne na macierzy
     Matrix add(Matrix &m2);

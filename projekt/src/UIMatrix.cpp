@@ -9,8 +9,29 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     mainPanel = new wxPanel(parent,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     //mainPanel->SetMinSize(wxSize(150,150));
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
-
     //nameTC = new wxTextCtrl(mainPanel,ID_NameTC,"debug",wxDefaultPosition,wxDefaultSize,0,wxTextValidator(wxFILTER_ALPHA,&name));
+
+    sizeList.Add("1");
+    sizeList.Add("2");
+    sizeList.Add("3");
+    sizeList.Add("4");
+    sizeList.Add("5");
+
+    wxPanel *topPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition,wxDefaultSize);
+    wxGridSizer *topLayout = new wxGridSizer(1,4,0,0);
+    rowsCB = new wxComboBox(topPanel,ID_RowsCB,"5",wxDefaultPosition,wxDefaultSize,sizeList,wxCB_READONLY);
+    rowsCB->Bind(wxEVT_COMBOBOX, &UIMatrix::OnSizeChange, this, ID_RowsCB);
+    colsCB = new wxComboBox(topPanel,ID_ColsCB,"5",wxDefaultPosition,wxDefaultSize,sizeList,wxCB_READONLY);
+    colsCB->Bind(wxEVT_COMBOBOX, &UIMatrix::OnSizeChange, this, ID_ColsCB);
+    wxStaticText *rowsT = new wxStaticText(topPanel,wxID_ANY,"Wierszy:",wxDefaultPosition,wxDefaultSize,wxALIGN_RIGHT);
+    wxStaticText *colsT = new wxStaticText(topPanel,wxID_ANY,"Kolumn:",wxDefaultPosition,wxDefaultSize,wxALIGN_RIGHT);
+    topLayout->Add(rowsT,0,wxEXPAND|wxRIGHT,2);
+    topLayout->Add(rowsCB,1,wxEXPAND|wxRIGHT,5);
+    topLayout->Add(colsT,0,wxEXPAND|wxRIGHT,2);
+    topLayout->Add(colsCB,1,wxEXPAND);
+    topPanel->SetSizer(topLayout);
+    topLayout->Layout();
+    sizeList.Add("?");
 
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY);
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
@@ -34,6 +55,7 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     infoT = new wxStaticText(mainPanel,ID_InfoT,"Macierz ?");
 
     //mainLayout->Add(nameTC,0,wxEXPAND);
+    mainLayout->Add(topPanel,0,wxEXPAND);
     mainLayout->Add(gridPanel,1,wxEXPAND);
     mainLayout->Add(infoT,0,wxEXPAND);
     mainPanel->SetSizer(mainLayout);
@@ -118,6 +140,25 @@ void UIMatrix::OnTextChange(wxCommandEvent& event)
     //}
     
     //mat->set(x,y,val);
+    event.Skip();//
+}
+
+void UIMatrix::OnSizeChange(wxCommandEvent& event)
+{
+    long new_size;
+
+    if(event.GetId()==ID_RowsCB)
+    {
+        rowsCB->GetValue().ToLong(&new_size,10);
+        mat->resize((int)new_size,mat->cols());
+    }
+    else
+    {
+        colsCB->GetValue().ToLong(&new_size,10);
+        mat->resize(mat->rows(),(int)new_size);
+    }
+    refresh();
+    event.Skip();
 }
 
 void UIMatrix::setPrecision(int prec)
