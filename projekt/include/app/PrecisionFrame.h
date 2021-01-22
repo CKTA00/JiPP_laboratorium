@@ -12,7 +12,7 @@
 
 class PrecisionFrame: public wxDialog
 {
-    int precision;
+    int *precision;
     wxTextCtrl *prec;
     public:
         PrecisionFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, long style, int &precision);

@@ -8,7 +8,7 @@
 #ifndef RESULT_FRAME_H
 #define RESULT_FRAME_H
 
-class ResultFrame: public wxFrame
+class ResultFrame: public wxDialog
 {
     wxTextCtrl **ui_matrix;
     Matrix *result;

@@ -1,4 +1,4 @@
-#include <PrecisionFrame.h>
+﻿#include <PrecisionFrame.h>
 
 wxBEGIN_EVENT_TABLE(PrecisionFrame, wxDialog)
     EVT_BUTTON(ID_OKBT, PrecisionFrame::OnOKClicked)
@@ -8,7 +8,7 @@ PrecisionFrame::PrecisionFrame(wxWindow *parent, const wxString& title, const wx
     : wxDialog(parent, wxID_ANY, title, pos, size, style)
 {
     //this->SetWindowStyleFlag(wx | wxRESIZE_BORDER);
-    this->precision=precision;
+    this->precision=&precision;
     SetMinSize(wxSize(80,100));
     wxPanel *panel = new wxPanel(this);
     wxBoxSizer *layout = new wxBoxSizer(wxVERTICAL);
@@ -28,10 +28,12 @@ PrecisionFrame::PrecisionFrame(wxWindow *parent, const wxString& title, const wx
 void PrecisionFrame::OnOKClicked(wxCommandEvent &evt)
 {
     prec->GetValidator()->TransferFromWindow();
-    if(precision<0||precision>9)
+    //wxMessageBox(wxString::Format("%d",precision));
+    if(*precision<0||*precision>9)
     {
         wxMessageBox("Precyzja musi być nieujemna i mniejsza od 10.","Nieprawidłowa precyzja",wxICON_INFORMATION|wxOK);
-        precision = 0;
+        *precision = 2;
+        //prec->SetValue(wxString::Format("%d",*precision));
         prec->GetValidator()->TransferToWindow();
         evt.Skip();
     }

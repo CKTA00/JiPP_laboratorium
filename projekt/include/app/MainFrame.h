@@ -33,14 +33,15 @@ private:
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
 
+    void OnNew(wxCommandEvent& event);
     void OnOpenFile(wxCommandEvent& event);
     void OnSaveFile(wxCommandEvent& event);
     void OnTranspose(wxCommandEvent& event);
     void OnOperation(wxCommandEvent& event);
     void OnPrecision(wxCommandEvent& event);
 
-    void RefreshPrecision();
-    void RefreshMatrixUI();
+    //void RefreshPrecision();
+    //void RefreshMatrixUI();
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -52,6 +53,9 @@ enum
     ID_Save,
     ID_SaveA,
     ID_SaveB,
+    ID_NewA,
+    ID_NewB,
+    ID_NewBoth,
     ID_TA,
     ID_TB,
     ID_Add,

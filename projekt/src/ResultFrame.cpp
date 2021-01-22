@@ -1,6 +1,6 @@
 ﻿#include <ResultFrame.h>
 
-wxBEGIN_EVENT_TABLE(ResultFrame, wxFrame)
+wxBEGIN_EVENT_TABLE(ResultFrame, wxDialog)
     EVT_BUTTON(ID_Back,      ResultFrame::OnBackClicked)
     EVT_BUTTON(ID_File,      ResultFrame::OnFileClicked)
     EVT_BUTTON(ID_ReplaceA,      ResultFrame::OnReplaceClicked)
@@ -8,8 +8,8 @@ wxBEGIN_EVENT_TABLE(ResultFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size,
-     Matrix &result, Matrix &a_mat, Matrix &b_mat, int precision)
-: wxFrame(parent, wxID_ANY, title, pos, size)
+            Matrix &result, Matrix &a_mat, Matrix &b_mat, int precision)
+: wxDialog(parent, wxID_ANY, title, pos, size)
 {
     this->result = &result;
     this->a_mat = &a_mat;
@@ -34,6 +34,10 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
     gridPanel->SetSizer(grid);
     grid->Layout();
 
+    wxStaticText *infoT = new wxStaticText(mainPanel,wxID_ANY,"Macierz");
+    if(result.displayable()) infoT->SetLabelText("Macierz Wynikowa");
+    else infoT->SetLabelText("Macierz Wynikowa - zbyt duża by wyświetlić");
+
     // BUTTONS
     wxPanel *buttonPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition);//, wxPoint(200,50),wxSize(100,30)
     wxBoxSizer *buttonLayout = new wxBoxSizer(wxHORIZONTAL);
@@ -50,6 +54,7 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
 
 
     mainLayout->Add(gridPanel,1,wxEXPAND|wxALL,5);
+    mainLayout->Add(infoT,0,wxEXPAND|wxLEFT|wxRIGHT,5);
     mainLayout->Add(buttonPanel,0,wxEXPAND|wxALL,5);
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();

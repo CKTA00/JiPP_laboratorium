@@ -1,6 +1,9 @@
 ﻿#include <MainFrame.h>
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+    EVT_MENU(ID_NewA,           MainFrame::OnNew)
+    EVT_MENU(ID_NewB,           MainFrame::OnNew)
+    EVT_MENU(ID_NewBoth,        MainFrame::OnNew)
     EVT_MENU(ID_OpenA,          MainFrame::OnOpenFile)
     EVT_MENU(ID_OpenB,          MainFrame::OnOpenFile)
     EVT_MENU(ID_SaveA,          MainFrame::OnSaveFile)
@@ -12,6 +15,11 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_Subtract_alt,   MainFrame::OnOperation)
     EVT_MENU(ID_Multiply,       MainFrame::OnOperation)
     EVT_MENU(ID_Multiply_alt,   MainFrame::OnOperation)
+    EVT_BUTTON(ID_AddBT,          MainFrame::OnOperation)
+    EVT_BUTTON(ID_SubtractBT,     MainFrame::OnOperation)
+    EVT_BUTTON(ID_Subtract_altBT, MainFrame::OnOperation)
+    EVT_BUTTON(ID_MultiplyBT,     MainFrame::OnOperation)
+    EVT_BUTTON(ID_Multiply_altBT, MainFrame::OnOperation)
     EVT_MENU(ID_Precision,      MainFrame::OnPrecision)
     EVT_MENU(wxID_EXIT,         MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT,        MainFrame::OnAbout)
@@ -26,9 +34,9 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     //  ogólne własności okna
     // =======================
 
-    SetMinSize(wxSize(300, 400));
+    SetMinSize(wxSize(420, 400));
     CreateStatusBar();
-    SetStatusText("gotowość");
+    SetStatusText("Gotowość.");
     wxPanel *mainPanel = new wxPanel(this);
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
 
@@ -38,14 +46,19 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     
     // menu Plik
     wxMenu *menuFile = new wxMenu;
+    wxMenu *submenuNew = new wxMenu;
+        submenuNew->Append(ID_NewA,"macierz &A","Wyczyść macierz A.");
+        submenuNew->Append(ID_NewB,"macierz &B","Wyczyść macierz B.");
+        submenuNew->Append(ID_NewBoth,"&obie","Wyczyść obie macierze.");
+    menuFile->Append(ID_Open, "&Nowa macierz",submenuNew,"Tworzy nową macierz 5 na 5");
         wxMenu *submenuOpen = new wxMenu;
         submenuOpen->Append(ID_OpenA,"macierz &A","Otwórz plik i zapisz na miejsce macierzy A.");
         submenuOpen->Append(ID_OpenB,"macierz &B","Otwórz plik i zapisz na miejsce macierzy B.");
-    menuFile->Append(ID_Open, "&Otwórz...",submenuOpen,"Otwórz plik z macierzą...");
+    menuFile->Append(ID_Open, "&Otwórz",submenuOpen,"Otwórz plik z macierzą...");
         wxMenu *submenuSave = new wxMenu;
         submenuSave->Append(ID_SaveA,"macierz &A","Zapisz macierz A jako...");
         submenuSave->Append(ID_SaveB,"macierz &B","Zapisz macierz B jako...");
-    menuFile->Append(ID_Save, "&Zapisz...",submenuSave,"Zapisz plik z macierzą...");
+    menuFile->Append(ID_Save, "&Zapisz",submenuSave,"Zapisz plik z macierzą...");
     menuFile->AppendSeparator();
     menuFile->Append(ID_Precision,"&Ustaw precyzję...","Ustaw precyzję wyświetlania liczb w macierzach.");
     menuFile->AppendSeparator();
@@ -55,23 +68,23 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxMenu *menuEdit = new wxMenu;
     menuEdit->Append(ID_Add,"&Dodaj","Dodaj macierze A i B.");
         wxMenu *submenuSubtract = new wxMenu;
-        submenuSubtract->Append(ID_Subtract,"&A - B","Odejmij macierz B od A (A-B)");
-        submenuSubtract->Append(ID_Subtract_alt,"&B - A","Odejmij macierz A od B (B-A)");
+        submenuSubtract->Append(ID_Subtract,"&A - B","Odejmij macierz B od A (A-B).");
+        submenuSubtract->Append(ID_Subtract_alt,"&B - A","Odejmij macierz A od B (B-A).");
     menuEdit->Append(wxID_ANY,"&Odejmij",submenuSubtract,"Odejmij macierze A od B lub na odwrót.");
         wxMenu *submenuMultiply = new wxMenu;
-        submenuMultiply->Append(ID_Multiply,"&A x B","Pomnóż macierz A przez macierz B");
-        submenuMultiply->Append(ID_Multiply_alt,"&B x A","Pomnóż macierz B przez macierz A");
+        submenuMultiply->Append(ID_Multiply,"&A x B","Pomnóż macierz A przez macierz B.");
+        submenuMultiply->Append(ID_Multiply_alt,"&B x A","Pomnóż macierz B przez macierz A.");
     menuEdit->Append(wxID_ANY,"Po&mnóż",submenuMultiply,"Pomnóż macierze A i B.");
     menuEdit->AppendSeparator();
     wxMenu *submenuTranspose = new wxMenu;
-        submenuTranspose->Append(ID_TA,"macierz &A","Otwórz plik i zapisz na miejsce macierzy A.");
-        submenuTranspose->Append(ID_TB,"macierz &B","Otwórz plik i zapisz na miejsce macierzy B.");
+        submenuTranspose->Append(ID_TA,"macierz &A","Transponuj macierz A.");
+        submenuTranspose->Append(ID_TB,"macierz &B","Transponuj macierz B.");
     menuEdit->Append(wxID_ANY,"&Transponuj",submenuTranspose,"transponuj macierz...");
 
     // menu Pomoc
     wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT,"&O kalkulatorze");
-    menuHelp->Append(wxID_ABOUT,"&Pomoc");
+    menuHelp->Append(wxID_ABOUT,"&O kalkulatorze","Informacje o programie.");
+    //menuHelp->Append(wxID_ABOUT,"&Pomoc");
 
     // menu główne
     wxMenuBar *menuBar = new wxMenuBar;
@@ -126,7 +139,29 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();
     SendSizeEvent();
-    RefreshPrecision();
+    ui_a->setPrecision(precision);
+    ui_b->setPrecision(precision);
+}
+
+void MainFrame::OnNew(wxCommandEvent& event)
+{
+    if(event.GetId()==ID_NewA)
+    {
+        a_mat = Matrix(5,5);
+        ui_a->refresh("Macierz A");
+    }
+    else if(event.GetId()==ID_NewB)
+    {
+        b_mat = Matrix(5,5);
+        ui_b->refresh("Macierz B");
+    }
+    else
+    {
+        a_mat = Matrix(5,5);
+        b_mat = Matrix(5,5);
+        ui_a->refresh("Macierz A");
+        ui_b->refresh("Macierz B");
+    }
 }
 
 void MainFrame::OnOpenFile(wxCommandEvent& event)
@@ -209,15 +244,15 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         int id = event.GetId();
         try
         {
-            if(id==ID_Add)
+            if(id==ID_Add||id==ID_AddBT)
                 result = a_mat + b_mat;
-            else if(id==ID_Subtract)
+            else if(id==ID_Subtract||id==ID_SubtractBT)
                 result = a_mat - b_mat;
-            else if(id==ID_Subtract_alt)
+            else if(id==ID_Subtract_alt||id==ID_Subtract_altBT)
                 result = b_mat - a_mat;
-            else if(id==ID_Multiply)
+            else if(id==ID_Multiply||id==ID_MultiplyBT)
                 result = a_mat * b_mat;
-            else if(id==ID_Multiply_alt)
+            else if(id==ID_Multiply_alt||ID_Multiply_altBT)
                 result = b_mat * a_mat;
         }
         catch(exception &e)
@@ -227,8 +262,20 @@ void MainFrame::OnOperation(wxCommandEvent& event)
             return;
         }
         
-        ResultFrame* rf = new ResultFrame(this, "Mini Kalkulator Macierzy", wxPoint(50, 50), wxSize(450, 250),result,a_mat,b_mat,precision);
-        rf->Show();
+        ResultFrame* rf = new ResultFrame(this, "Wynik działania", wxPoint(300, 300), wxSize(450, 250),result,a_mat,b_mat,precision);
+        rf->ShowModal();
+        if(id==ID_Add||id==ID_AddBT)
+                result = a_mat + b_mat;
+            else if(id==ID_Subtract||id==ID_SubtractBT)
+                result = a_mat - b_mat;
+            else if(id==ID_Subtract_alt||id==ID_Subtract_altBT)
+                result = b_mat - a_mat;
+            else if(id==ID_Multiply||id==ID_MultiplyBT)
+                result = a_mat * b_mat;
+            else if(id==ID_Multiply_alt||ID_Multiply_altBT)
+                result = b_mat * a_mat;
+        ui_a->refresh("Macierz A");
+        ui_b->refresh("Macierz B");
     }
     else
     {
@@ -252,12 +299,14 @@ void MainFrame::OnOperation(wxCommandEvent& event)
 
 void MainFrame::OnPrecision(wxCommandEvent& event)
 {
-    PrecisionFrame* pf = new PrecisionFrame(this,"Ustaw precyzje", wxPoint(0, 0), wxSize(160,100),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, precision);
+    PrecisionFrame* pf = new PrecisionFrame(this,"Ustaw precyzje", wxPoint(300, 300), wxSize(160,120),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, precision);
     //pf->ShowModal();
     pf->ShowWindowModal();
-    RefreshPrecision();
+    ui_a->setPrecision(precision);
+    ui_b->setPrecision(precision);
 }
 
+/*
 void MainFrame::RefreshPrecision()
 {
     ui_a->setPrecision(precision);
@@ -266,9 +315,9 @@ void MainFrame::RefreshPrecision()
 
 void MainFrame::RefreshMatrixUI()
 {
-    ui_a->refresh();
-    ui_b->refresh();
-}
+    ui_a->refresh(true);
+    ui_b->refresh(true);
+}*/
 
 void MainFrame::OnExit(wxCommandEvent& event)
 {

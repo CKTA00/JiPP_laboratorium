@@ -31,7 +31,6 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     topLayout->Add(colsCB,1,wxEXPAND);
     topPanel->SetSizer(topLayout);
     topLayout->Layout();
-    sizeList.Add("?");
 
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY);
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
@@ -67,18 +66,19 @@ wxPanel* UIMatrix::getMainPanel()
     return mainPanel;
 }
 
+/*
 void UIMatrix::clear()
 {
     for(int x = 0; x < 5; ++x)
     {
         for(int y = 0; y < 5; ++y)
         {
-            textControls[5*y+x]->SetLabelText("");
-            textControls[5*y+x]->Enable(false);
+            textControls[5*y+x]->SetLabelText("0");
+            textControls[5*y+x]->Enable(true);
         }
     }
-    //refresh();
-}
+    refresh();
+}*/
 
 void UIMatrix::refresh(wxString inf)
 {
@@ -106,6 +106,10 @@ void UIMatrix::refresh(wxString inf)
             }
         } 
         infoT->SetLabelText(inf);
+        rowsCB->Enable(true);
+        colsCB->Enable(true);
+        rowsCB->SetValue(wxString::Format("%d",mat->rows()));
+        colsCB->SetValue(wxString::Format("%d",mat->cols()));
     }
     else
     {
@@ -117,10 +121,12 @@ void UIMatrix::refresh(wxString inf)
                 textControls[5*y+x]->Enable(false);
             }
         } 
-        infoT->SetLabelText(inf + " - za duży aby wyświetlić");
+        infoT->SetLabelText(inf + " - za duża aby wyświetlić");
+        rowsCB->SetValue(wxString::Format("%d",mat->rows()));
+        colsCB->SetValue(wxString::Format("%d",mat->cols()));
+        rowsCB->Enable(false);
+        colsCB->Enable(false);
     }
-    
-    
 }
 
 void UIMatrix::refresh()

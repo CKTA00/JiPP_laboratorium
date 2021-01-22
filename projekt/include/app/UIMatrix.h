@@ -31,13 +31,13 @@ class UIMatrix
 public:
     UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space);
     wxPanel* getMainPanel();
-    void clear();
     void resize(int n, int m); // max do 5
-    void refresh();                 // wywołuj po zmiane wskaznika w funkcjach MainFrame'a
+    void refresh(); 
     void refresh(wxString inf); 
     void setPrecision(int prec);
     void OnTextChange(wxCommandEvent& event);
     void OnSizeChange(wxCommandEvent& event);
+
 
     //nazwa
     //void setName(wxString name);
