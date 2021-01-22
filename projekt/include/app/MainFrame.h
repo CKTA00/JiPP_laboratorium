@@ -3,10 +3,13 @@
 #ifndef WX_PRECOMP
     #include <wx/wx.h>
 #endif
+#include <wx/dialog.h>
 
 #include <matrix.h>
 #include <ResultFrame.h>
 #include <UIMatrix.h>
+#include <PrecisionFrame.h>
+
 
 #ifndef MAIN_FRAME_H
 #define MAIN_FRAME_H
@@ -18,12 +21,11 @@ public:
     bool a_good, b_good;
     Matrix a_mat = Matrix(5);
     Matrix b_mat = Matrix(5);
-    Matrix result = Matrix(5);
-
     UIMatrix *ui_a;
     UIMatrix *ui_b;
-    //wxTextCtrl **ui_a;
-    //wxTextCtrl **ui_b;
+    Matrix result = Matrix(5);
+    int precision = 2;
+
 private:
     const wxString nd = "Nieprawidłowe dane.";
 
@@ -35,6 +37,10 @@ private:
     void OnSaveFile(wxCommandEvent& event);
     void OnTranspose(wxCommandEvent& event);
     void OnOperation(wxCommandEvent& event);
+    void OnPrecision(wxCommandEvent& event);
+
+    void RefreshPrecision();
+    void RefreshMatrixUI();
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -53,6 +59,7 @@ enum
     ID_Subtract_alt,
     ID_Multiply,
     ID_Multiply_alt,
+    ID_Precision,
     ID_AddBT,
     ID_SubtractBT,
     ID_Subtract_altBT,

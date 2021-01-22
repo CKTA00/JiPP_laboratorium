@@ -18,7 +18,7 @@ class UIMatrix
     wxStaticText *infoT;
     // wskaźnik na dane z MainFrame'a:
     Matrix *mat;
-
+    int precision;
     int idSpace;
     
 public:
@@ -27,8 +27,8 @@ public:
     void clear();
     void resize(int n, int m); // max do 5
     void refresh(); // wywołuj po zmiane wskaznika w funkcjach MainFrame'a
-    //void setMatrix(Matrix &mat); // tu sprawdzaj czy displayable
-    void OnTextEnter(wxCommandEvent& event);
+    void setPrecision(int prec);
+    void OnTextChange(wxCommandEvent& event);
 };
 
 enum

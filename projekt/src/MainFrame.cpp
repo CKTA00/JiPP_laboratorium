@@ -12,6 +12,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_Subtract_alt,   MainFrame::OnOperation)
     EVT_MENU(ID_Multiply,       MainFrame::OnOperation)
     EVT_MENU(ID_Multiply_alt,   MainFrame::OnOperation)
+    EVT_MENU(ID_Precision,      MainFrame::OnPrecision)
     EVT_MENU(wxID_EXIT,         MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT,        MainFrame::OnAbout)
 wxEND_EVENT_TABLE()
@@ -45,6 +46,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
         submenuSave->Append(ID_SaveA,"macierz &A","Zapisz macierz A jako...");
         submenuSave->Append(ID_SaveB,"macierz &B","Zapisz macierz B jako...");
     menuFile->Append(ID_Save, "&Zapisz...",submenuSave,"Zapisz plik z macierzą...");
+    menuFile->AppendSeparator();
+    menuFile->Append(ID_Precision,"&Ustaw precyzję...","Ustaw precyzję wyświetlania liczb w macierzach.");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT,"Za&kończ","Zamknij program.");
 
@@ -121,6 +124,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();
     SendSizeEvent();
+    RefreshPrecision();
 }
 
 void MainFrame::OnOpenFile(wxCommandEvent& event)
@@ -223,7 +227,7 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         }
         
         ResultFrame* rf = new ResultFrame(this, "Mini Kalkulator Macierzy", wxPoint(50, 50), wxSize(450, 250),result,a_mat,b_mat);
-    	rf->Show();
+        rf->Show();
     }
     else
     {
@@ -243,6 +247,26 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         return;
     }
     event.Skip();
+}
+
+void MainFrame::OnPrecision(wxCommandEvent& event)
+{
+    PrecisionFrame* pf = new PrecisionFrame(this,"Ustaw precyzje", wxPoint(50, 50), wxSize(160,90),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, precision);
+    //pf->ShowModal();
+    pf->ShowWindowModal();
+    RefreshPrecision();
+}
+
+void MainFrame::RefreshPrecision()
+{
+    ui_a->setPrecision(precision);
+    ui_b->setPrecision(precision);
+}
+
+void MainFrame::RefreshMatrixUI()
+{
+    ui_a->refresh();
+    ui_b->refresh();
 }
 
 void MainFrame::OnExit(wxCommandEvent& event)

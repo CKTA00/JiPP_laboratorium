@@ -4,6 +4,7 @@
 UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
 {
     mat = mat_ptr;
+    precision = 2;
     this->idSpace = id_space;
     mainPanel = new wxPanel(parent,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     //mainPanel->SetMinSize(wxSize(150,150));
@@ -13,17 +14,19 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
 
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY);
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
-    textControls = new wxTextCtrl*[25];  
+    textControls = new wxTextCtrl*[25]; 
+    int new_id; 
     for(int x = 0; x < 5; ++x)
     {
         for(int y = 0; y < 5; ++y)
         {
-            textControls[5*y+x] = new wxTextCtrl(gridPanel,id_space*10000+5*y+x,"0",wxDefaultPosition,wxDefaultSize,wxTE_PROCESS_TAB|wxTE_CENTRE,
-                wxFloatingPointValidator<double>(6,get_ptr(mat,x,y),0));
+            new_id = id_space*10000+5*y+x;
+            textControls[5*y+x] = new wxTextCtrl(gridPanel,new_id,"-",wxDefaultPosition,wxDefaultSize,wxTE_CENTRE,
+                wxFloatingPointValidator<double>(precision,get_ptr(mat,x,y),0));
             textControls[5*y+x]->Enable(true);
+            textControls[5*y+x]->Bind(wxEVT_TEXT, &UIMatrix::OnTextChange, this, new_id);
             grid->Add(textControls[5*y+x], 1, wxEXPAND | wxALL);
             //10000+5*y+x
-            //textControls[5*y+x]->Bind(wxEVT_TEXT_ENTER, UIMatrix::OnTextEnter, this, 10000);
         }
     }
     //wxMessageBox(wxString::Format(wxT("%lf"),test));
@@ -67,9 +70,10 @@ void UIMatrix::refresh()
             {
                 if(x<r && y<c)
                 {
-                    textControls[5*y+x]->SetLabelText(wxString::Format(wxT("%lf"),mat->get(x,y)));
-                    textControls[5*y+x]->SetValidator(wxFloatingPointValidator<double>(6,get_ptr(mat,x,y),0));
+                    //textControls[5*y+x]->SetLabelText( wxString::Format(wxT("%lf"), mat->get(x,y)) );
+                    textControls[5*y+x]->SetValidator(wxFloatingPointValidator<double>(precision,get_ptr(mat,x,y),0));
                     textControls[5*y+x]->Enable(true);
+                    textControls[5*y+x]->GetValidator()->TransferToWindow();
                 }
                 else
                 {
@@ -81,17 +85,26 @@ void UIMatrix::refresh()
     } 
 }
 
-void UIMatrix::OnTextEnter(wxCommandEvent& event)
+void UIMatrix::OnTextChange(wxCommandEvent& event)
 {
     int x = (event.GetId()-10000*idSpace)%5;
     int y = (event.GetId()-10000*idSpace)/5;
     double val;
-    if(textControls[5*y+x]->GetLabelText().ToDouble(&val))
-    {
-        ///
-    }
-    mat->set(x,y,val);
+    textControls[5*y+x]->GetValidator()->TransferFromWindow();
+    //if(textControls[5*y+x]->GetLabelText().ToDouble(&val))
+   // {
+        //wxMessageBox("Debug");
+    //}
+    
+    //mat->set(x,y,val);
 }
+
+void UIMatrix::setPrecision(int prec)
+{
+    precision = prec;
+    refresh();
+}
+
 
 double* get_ptr(Matrix *mat,int n,int m)
 {
