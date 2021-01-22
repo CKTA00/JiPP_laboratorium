@@ -1,4 +1,4 @@
-#include <UIMatrix.h>
+﻿#include <UIMatrix.h>
 
 
 UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
@@ -10,7 +10,7 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     //mainPanel->SetMinSize(wxSize(150,150));
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
 
-    nameTC = new wxTextCtrl(mainPanel,ID_NameTC,"debug",wxDefaultPosition,wxSize(30,30));
+    //nameTC = new wxTextCtrl(mainPanel,ID_NameTC,"debug",wxDefaultPosition,wxDefaultSize,0,wxTextValidator(wxFILTER_ALPHA,&name));
 
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY);
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
@@ -26,15 +26,16 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
             textControls[5*y+x]->Enable(true);
             textControls[5*y+x]->Bind(wxEVT_TEXT, &UIMatrix::OnTextChange, this, new_id);
             grid->Add(textControls[5*y+x], 1, wxEXPAND | wxALL);
-            //10000+5*y+x
         }
     }
-    //wxMessageBox(wxString::Format(wxT("%lf"),test));
     gridPanel->SetSizer(grid);
     grid->Layout();
 
-    mainLayout->Add(nameTC,0,wxEXPAND);
+    infoT = new wxStaticText(mainPanel,ID_InfoT,"Macierz ?");
+
+    //mainLayout->Add(nameTC,0,wxEXPAND);
     mainLayout->Add(gridPanel,1,wxEXPAND);
+    mainLayout->Add(infoT,0,wxEXPAND);
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();
 }
@@ -57,7 +58,7 @@ void UIMatrix::clear()
     //refresh();
 }
 
-void UIMatrix::refresh()
+void UIMatrix::refresh(wxString inf)
 {
     if(mat->displayable())
     {
@@ -82,7 +83,27 @@ void UIMatrix::refresh()
                 }  
             }
         } 
-    } 
+        infoT->SetLabelText(inf);
+    }
+    else
+    {
+        for(int x = 0; x < 5; ++x)
+        {
+            for(int y = 0; y < 5; ++y)
+            {
+                textControls[5*y+x]->SetLabelText("");
+                textControls[5*y+x]->Enable(false);
+            }
+        } 
+        infoT->SetLabelText(inf + " - za duży aby wyświetlić");
+    }
+    
+    
+}
+
+void UIMatrix::refresh()
+{
+    UIMatrix::refresh(infoT->GetLabelText());
 }
 
 void UIMatrix::OnTextChange(wxCommandEvent& event)
@@ -105,6 +126,17 @@ void UIMatrix::setPrecision(int prec)
     refresh();
 }
 
+/*
+void UIMatrix::setName(wxString name)
+{
+    this->name = name;
+}
+
+string UIMatrix::getName()
+{
+    return name;
+}
+*/
 
 double* get_ptr(Matrix *mat,int n,int m)
 {

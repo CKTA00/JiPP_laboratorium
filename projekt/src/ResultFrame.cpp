@@ -7,7 +7,8 @@ wxBEGIN_EVENT_TABLE(ResultFrame, wxFrame)
     EVT_BUTTON(ID_ReplaceB,      ResultFrame::OnReplaceClicked)
 wxEND_EVENT_TABLE()
 
-ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, Matrix &result, Matrix &a_mat, Matrix &b_mat)
+ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size,
+     Matrix &result, Matrix &a_mat, Matrix &b_mat, int precision)
 : wxFrame(parent, wxID_ANY, title, pos, size)
 {
     this->result = &result;
@@ -61,7 +62,7 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
             for(int y = result.cols()-1; y >= 0; --y)
             {
                 ui_matrix[5*y+x]->Enable(true);
-                ui_matrix[5*y+x]->SetLabelText(wxString::Format(wxT("%lf"),result.get(x,y)));
+                ui_matrix[5*y+x]->SetLabelText(wxString::FromDouble	(result.get(x,y) , precision));
             }
         }
     }

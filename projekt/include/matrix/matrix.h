@@ -14,9 +14,10 @@ private:
     
     int c,r;
     double** data;
+    
 
 public:
-    
+    string name;
     //konstruktory i detruktor
     Matrix(int rows, int cols);
     Matrix(int size);
@@ -25,6 +26,7 @@ public:
     ~Matrix();
 
     Matrix& operator=(const Matrix &m2); //operator kopiujący
+
 
     //operacje na pojedyńczej komórce
     void set(int n, int m, double val);

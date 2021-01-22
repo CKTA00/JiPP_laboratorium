@@ -88,7 +88,9 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxGridSizer *workspaceLayout = new wxGridSizer(1,2,0,0);
     //wxBoxSizer *workspaceLayout = new wxBoxSizer(wxHORIZONTAL);
     ui_a = new UIMatrix(workspacePanel,&a_mat,1);
+    ui_a->refresh("Macierz A");
     ui_b = new UIMatrix(workspacePanel,&b_mat,2);
+    ui_b->refresh("Macierz B");
     workspaceLayout->Add(ui_a->getMainPanel(),1,wxEXPAND|wxALL,5);
     workspaceLayout->Add(ui_b->getMainPanel(),1,wxEXPAND|wxALL,5);
     workspaceLayout->Layout();
@@ -143,10 +145,10 @@ void MainFrame::OnOpenFile(wxCommandEvent& event)
 
     if(event.GetId()==ID_OpenA){
         a_mat = Matrix(path.ToStdString());
-        ui_a->refresh();
+        ui_a->refresh(filename);
     }else{
         b_mat = Matrix(path.ToStdString());
-        ui_b->refresh();
+        ui_b->refresh(filename);
     }
     event.Skip();
 }
@@ -184,7 +186,7 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz A",wxOK | wxICON_ERROR);
             a_mat = Matrix(5,5);
         }
-        ui_a->refresh();
+        ui_a->refresh("T(A)");
     }
     else
     {
@@ -195,7 +197,7 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz B",wxOK | wxICON_ERROR);
             b_mat = Matrix(5,5);
         }
-        ui_b->refresh();
+        ui_b->refresh("T(B)");
     }
     event.Skip();
 }
@@ -204,7 +206,6 @@ void MainFrame::OnOperation(wxCommandEvent& event)
 {
     if(a_good && b_good)
     {
-        
         int id = event.GetId();
         try
         {
@@ -221,12 +222,12 @@ void MainFrame::OnOperation(wxCommandEvent& event)
         }
         catch(exception &e)
         {
-            wxMessageBox(nd,e.what(),wxOK | wxICON_INFORMATION);
+            wxMessageBox(e.what(),nd,wxOK | wxICON_INFORMATION);
             event.Skip();
             return;
         }
         
-        ResultFrame* rf = new ResultFrame(this, "Mini Kalkulator Macierzy", wxPoint(50, 50), wxSize(450, 250),result,a_mat,b_mat);
+        ResultFrame* rf = new ResultFrame(this, "Mini Kalkulator Macierzy", wxPoint(50, 50), wxSize(450, 250),result,a_mat,b_mat,precision);
         rf->Show();
     }
     else
@@ -251,7 +252,7 @@ void MainFrame::OnOperation(wxCommandEvent& event)
 
 void MainFrame::OnPrecision(wxCommandEvent& event)
 {
-    PrecisionFrame* pf = new PrecisionFrame(this,"Ustaw precyzje", wxPoint(50, 50), wxSize(160,90),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, precision);
+    PrecisionFrame* pf = new PrecisionFrame(this,"Ustaw precyzje", wxPoint(0, 0), wxSize(160,100),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER, precision);
     //pf->ShowModal();
     pf->ShowWindowModal();
     RefreshPrecision();

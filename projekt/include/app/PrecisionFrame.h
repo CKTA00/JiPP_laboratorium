@@ -22,7 +22,7 @@ class PrecisionFrame: public wxDialog
 
 enum
 {
-    ID_PREC = 500,
+    ID_PREC = 600,
     ID_OKBT
 };
 

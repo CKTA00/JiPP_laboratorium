@@ -1,4 +1,4 @@
-#include <matrix.h>
+﻿#include <matrix.h>
 
 #define W 5
 
@@ -276,3 +276,4 @@ ostream& operator<<(ostream& ostr, const Matrix& mat)
     }
     return ostr;
 }
+

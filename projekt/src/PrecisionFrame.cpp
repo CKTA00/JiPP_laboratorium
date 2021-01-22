@@ -9,18 +9,17 @@ PrecisionFrame::PrecisionFrame(wxWindow *parent, const wxString& title, const wx
 {
     //this->SetWindowStyleFlag(wx | wxRESIZE_BORDER);
     this->precision=precision;
-    SetMinSize(wxSize(100, 80));
+    SetMinSize(wxSize(80,100));
     wxPanel *panel = new wxPanel(this);
     wxBoxSizer *layout = new wxBoxSizer(wxVERTICAL);
 
     prec = new wxTextCtrl(panel,ID_PREC,wxString::Format(wxT("%d"),precision),wxDefaultPosition,wxDefaultSize,
     0,wxIntegerValidator<int>(&precision,0));
     
-
     wxButton *OKBTN = new wxButton(panel,ID_OKBT,"OK",wxDefaultPosition,wxDefaultSize);
 
-    layout->Add(ID_PREC,1,wxEXPAND|wxALL,5);
-    layout->Add(ID_OKBT,1,wxEXPAND|wxALL,5);
+    layout->Add(prec,0,wxEXPAND|wxALL,5);
+    layout->Add(OKBTN,0,wxTOP|wxALL,5);
 
     panel->SetSizer(layout);
     layout->Layout();

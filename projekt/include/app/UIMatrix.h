@@ -13,11 +13,12 @@ class UIMatrix
 {
     // elementy UI:
     wxPanel *mainPanel;
-    wxTextCtrl *nameTC;
+    //wxTextCtrl *nameTC;
     wxTextCtrl **textControls;
     wxStaticText *infoT;
     // wskaźnik na dane z MainFrame'a:
     Matrix *mat;
+    //wxString name;
     int precision;
     int idSpace;
     
@@ -26,9 +27,14 @@ public:
     wxPanel* getMainPanel();
     void clear();
     void resize(int n, int m); // max do 5
-    void refresh(); // wywołuj po zmiane wskaznika w funkcjach MainFrame'a
+    void refresh();                 // wywołuj po zmiane wskaznika w funkcjach MainFrame'a
+    void refresh(wxString inf); 
     void setPrecision(int prec);
     void OnTextChange(wxCommandEvent& event);
+
+    //nazwa
+    //void setName(wxString name);
+    //string getName();
 };
 
 enum
