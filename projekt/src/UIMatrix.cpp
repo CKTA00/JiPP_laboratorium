@@ -3,20 +3,20 @@
 
 UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
 {
+    // OGÓLNE:
     mat = mat_ptr;
     precision = 2;
     this->idSpace = id_space;
     mainPanel = new wxPanel(parent,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     //mainPanel->SetMinSize(wxSize(150,150));
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
-    //nameTC = new wxTextCtrl(mainPanel,ID_NameTC,"debug",wxDefaultPosition,wxDefaultSize,0,wxTextValidator(wxFILTER_ALPHA,&name));
-
     sizeList.Add("1");
     sizeList.Add("2");
     sizeList.Add("3");
     sizeList.Add("4");
     sizeList.Add("5");
 
+    // PANEL Z USTAWIANIEM WIELKOŚCI MACIERZY:
     wxPanel *topPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     wxGridSizer *topLayout = new wxGridSizer(1,4,0,0);
     rowsCB = new wxComboBox(topPanel,ID_RowsCB,"5",wxDefaultPosition,wxDefaultSize,sizeList,wxCB_READONLY);
@@ -32,6 +32,7 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     topPanel->SetSizer(topLayout);
     topLayout->Layout();
 
+    // PANEL MACIERZY:
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY);
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
     textControls = new wxTextCtrl*[25]; 
@@ -51,9 +52,10 @@ UIMatrix::UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space)
     gridPanel->SetSizer(grid);
     grid->Layout();
 
+    // PASEK INFORMACJI POD MACIERZĄ:
     infoT = new wxStaticText(mainPanel,ID_InfoT,"Macierz ?");
 
-    //mainLayout->Add(nameTC,0,wxEXPAND);
+    // OKNO GŁÓWNE:
     mainLayout->Add(topPanel,0,wxEXPAND);
     mainLayout->Add(gridPanel,1,wxEXPAND);
     mainLayout->Add(infoT,0,wxEXPAND);
@@ -65,20 +67,6 @@ wxPanel* UIMatrix::getMainPanel()
 {
     return mainPanel;
 }
-
-/*
-void UIMatrix::clear()
-{
-    for(int x = 0; x < 5; ++x)
-    {
-        for(int y = 0; y < 5; ++y)
-        {
-            textControls[5*y+x]->SetLabelText("0");
-            textControls[5*y+x]->Enable(true);
-        }
-    }
-    refresh();
-}*/
 
 void UIMatrix::refresh(wxString inf)
 {
@@ -138,15 +126,8 @@ void UIMatrix::OnTextChange(wxCommandEvent& event)
 {
     int x = (event.GetId()-10000*idSpace)%5;
     int y = (event.GetId()-10000*idSpace)/5;
-    double val;
     textControls[5*y+x]->GetValidator()->TransferFromWindow();
-    //if(textControls[5*y+x]->GetLabelText().ToDouble(&val))
-   // {
-        //wxMessageBox("Debug");
-    //}
-    
-    //mat->set(x,y,val);
-    event.Skip();//
+    event.Skip();
 }
 
 void UIMatrix::OnSizeChange(wxCommandEvent& event)
@@ -173,17 +154,6 @@ void UIMatrix::setPrecision(int prec)
     refresh();
 }
 
-/*
-void UIMatrix::setName(wxString name)
-{
-    this->name = name;
-}
-
-string UIMatrix::getName()
-{
-    return name;
-}
-*/
 
 double* get_ptr(Matrix *mat,int n,int m)
 {

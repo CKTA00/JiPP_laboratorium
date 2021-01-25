@@ -28,7 +28,6 @@ PrecisionFrame::PrecisionFrame(wxWindow *parent, const wxString& title, const wx
 void PrecisionFrame::OnOKClicked(wxCommandEvent &evt)
 {
     prec->GetValidator()->TransferFromWindow();
-    //wxMessageBox(wxString::Format("%d",precision));
     if(*precision<0||*precision>9)
     {
         wxMessageBox("Precyzja musi być nieujemna i mniejsza od 10.","Nieprawidłowa precyzja",wxICON_INFORMATION|wxOK);

@@ -12,9 +12,8 @@
 
 class UIMatrix
 {
-    // elementy UI:
+    // ELEMENTY UI:
     wxPanel *mainPanel;
-    //wxTextCtrl *nameTC;
     wxTextCtrl **textControls;
     wxComboBox *rowsCB, *colsCB;
     wxStaticText *infoT;
@@ -22,7 +21,6 @@ class UIMatrix
 
     // wskaźnik na dane z MainFrame'a:
     Matrix *mat;
-    //wxString name;
 
     //pozostałe informacje
     int precision;
@@ -30,18 +28,23 @@ class UIMatrix
     
 public:
     UIMatrix(wxWindow *parent, Matrix *mat_ptr, int id_space);
+
+    //zwraca wskaźnik do panelu głównego (przydatne podczas przyłańczania do głównego okna)
     wxPanel* getMainPanel();
-    void resize(int n, int m); // max do 5
-    void refresh(); 
+    
+    //zmienia rozmiar macierzy (maks do 5 na 5)
+    void resize(int n, int m);
+    //odśwież widok po zmianie danych
+    void refresh();
+    //odśwież widok po zmianie danych i zmień informacje pod macierzą na inf
     void refresh(wxString inf); 
+    //ustaw precyzje walidatorów
     void setPrecision(int prec);
+    
+    // ZDARZENIA:
+
     void OnTextChange(wxCommandEvent& event);
     void OnSizeChange(wxCommandEvent& event);
-
-
-    //nazwa
-    //void setName(wxString name);
-    //string getName();
 };
 
 enum

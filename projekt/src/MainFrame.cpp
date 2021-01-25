@@ -26,12 +26,13 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-//UIMatrix::OnTextEnter
+// UKŁAD KONTROLEK:
+
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
         : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
     // =======================
-    //  ogólne własności okna
+    //  Ogólne własności okna
     // =======================
 
     SetMinSize(wxSize(420, 400));
@@ -41,7 +42,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
 
     // =====================
-    //  pasek menu na górze
+    //  Pasek menu na górze
     // =====================
     
     // menu Plik
@@ -100,16 +101,15 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     wxPanel *workspacePanel = new wxPanel(mainPanel);
     wxGridSizer *workspaceLayout = new wxGridSizer(1,2,0,0);
     //wxBoxSizer *workspaceLayout = new wxBoxSizer(wxHORIZONTAL);
-    ui_a = new UIMatrix(workspacePanel,&a_mat,1);
+    ui_a = new UIMatrix(workspacePanel,&mat_a,1);
     ui_a->refresh("Macierz A");
-    ui_b = new UIMatrix(workspacePanel,&b_mat,2);
+    ui_b = new UIMatrix(workspacePanel,&mat_b,2);
     ui_b->refresh("Macierz B");
     workspaceLayout->Add(ui_a->getMainPanel(),1,wxEXPAND|wxALL,5);
     workspaceLayout->Add(ui_b->getMainPanel(),1,wxEXPAND|wxALL,5);
     workspaceLayout->Layout();
     workspacePanel->SetSizer(workspaceLayout);
     
-
     // ==================
     //  Panel przycisków
     // ==================
@@ -131,7 +131,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     buttonLayout->Layout();
 
     // =================================
-    //  rozmieszczenie na głównym oknie
+    //  Rozmieszczenie na głównym oknie
     // =================================
     
     mainLayout->Add(workspacePanel,1,wxEXPAND|wxALL,5);
@@ -143,22 +143,24 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     ui_b->setPrecision(precision);
 }
 
+// ZDARZENIA:
+
 void MainFrame::OnNew(wxCommandEvent& event)
 {
     if(event.GetId()==ID_NewA)
     {
-        a_mat = Matrix(5,5);
+        mat_a = Matrix(5,5);
         ui_a->refresh("Macierz A");
     }
     else if(event.GetId()==ID_NewB)
     {
-        b_mat = Matrix(5,5);
+        mat_b = Matrix(5,5);
         ui_b->refresh("Macierz B");
     }
     else
     {
-        a_mat = Matrix(5,5);
-        b_mat = Matrix(5,5);
+        mat_a = Matrix(5,5);
+        mat_b = Matrix(5,5);
         ui_a->refresh("Macierz A");
         ui_b->refresh("Macierz B");
     }
@@ -179,10 +181,10 @@ void MainFrame::OnOpenFile(wxCommandEvent& event)
     }
 
     if(event.GetId()==ID_OpenA){
-        a_mat = Matrix(path.ToStdString());
+        mat_a = Matrix(path.ToStdString());
         ui_a->refresh(filename);
     }else{
-        b_mat = Matrix(path.ToStdString());
+        mat_b = Matrix(path.ToStdString());
         ui_b->refresh(filename);
     }
     event.Skip();
@@ -203,9 +205,9 @@ void MainFrame::OnSaveFile(wxCommandEvent& event)
     }
 
     if(event.GetId()==ID_SaveA){
-        a_mat.save(path.ToStdString());
+        mat_a.save(path.ToStdString());
     }else{
-        b_mat.save(path.ToStdString());
+        mat_b.save(path.ToStdString());
     }
     event.Skip();
 }
@@ -215,22 +217,22 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
     if(event.GetId()==ID_TA)
     {
         try {
-            a_mat = a_mat.transpose();
+            mat_a = mat_a.transpose();
         }
         catch(const exception& e){
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz A",wxOK | wxICON_ERROR);
-            a_mat = Matrix(5,5);
+            mat_a = Matrix(5,5);
         }
         ui_a->refresh("T(A)");
     }
     else
     {
         try{
-            b_mat = b_mat.transpose();
+            mat_b = mat_b.transpose();
         }
         catch(const exception& e){
             wxMessageBox(e.what(),"Błąd funkcji transpozycji - macierz B",wxOK | wxICON_ERROR);
-            b_mat = Matrix(5,5);
+            mat_b = Matrix(5,5);
         }
         ui_b->refresh("T(B)");
     }
@@ -239,61 +241,30 @@ void MainFrame::OnTranspose(wxCommandEvent& event)
 
 void MainFrame::OnOperation(wxCommandEvent& event)
 {
-    if(a_good && b_good)
+    int id = event.GetId();
+    try
     {
-        int id = event.GetId();
-        try
-        {
-            if(id==ID_Add||id==ID_AddBT)
-                result = a_mat + b_mat;
-            else if(id==ID_Subtract||id==ID_SubtractBT)
-                result = a_mat - b_mat;
-            else if(id==ID_Subtract_alt||id==ID_Subtract_altBT)
-                result = b_mat - a_mat;
-            else if(id==ID_Multiply||id==ID_MultiplyBT)
-                result = a_mat * b_mat;
-            else if(id==ID_Multiply_alt||ID_Multiply_altBT)
-                result = b_mat * a_mat;
-        }
-        catch(exception &e)
-        {
-            wxMessageBox(e.what(),nd,wxOK | wxICON_INFORMATION);
-            event.Skip();
-            return;
-        }
-        
-        ResultFrame* rf = new ResultFrame(this, "Wynik działania", wxPoint(300, 300), wxSize(450, 250),result,a_mat,b_mat,precision);
-        rf->ShowModal();
         if(id==ID_Add||id==ID_AddBT)
-                result = a_mat + b_mat;
-            else if(id==ID_Subtract||id==ID_SubtractBT)
-                result = a_mat - b_mat;
-            else if(id==ID_Subtract_alt||id==ID_Subtract_altBT)
-                result = b_mat - a_mat;
-            else if(id==ID_Multiply||id==ID_MultiplyBT)
-                result = a_mat * b_mat;
-            else if(id==ID_Multiply_alt||ID_Multiply_altBT)
-                result = b_mat * a_mat;
-        ui_a->refresh("Macierz A");
-        ui_b->refresh("Macierz B");
+            result = mat_a + mat_b;
+        else if(id==ID_Subtract||id==ID_SubtractBT)
+            result = mat_a - mat_b;
+        else if(id==ID_Subtract_alt||id==ID_Subtract_altBT)
+            result = mat_b - mat_a;
+        else if(id==ID_Multiply||id==ID_MultiplyBT)
+            result = mat_a * mat_b;
+        else if(id==ID_Multiply_alt||ID_Multiply_altBT)
+            result = mat_b * mat_a;
     }
-    else
+    catch(exception &e)
     {
-        if(!a_good && !b_good)
-        {
-            wxMessageBox(nd,"Macierze A i B są puste.",wxOK | wxICON_INFORMATION);
-        }
-        else if(a_good)
-        {
-            wxMessageBox(nd,"Macierz B jest pusta.",wxOK | wxICON_INFORMATION);
-        }
-        else
-        {
-            wxMessageBox(nd,"Macierz A jest pusta.",wxOK | wxICON_INFORMATION);
-        }
+        wxMessageBox(e.what(),nd,wxOK | wxICON_INFORMATION);
         event.Skip();
         return;
     }
+    ResultFrame* rf = new ResultFrame(this, "Wynik działania", wxPoint(300, 300), wxSize(450, 250),wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER,result,mat_a,mat_b,precision);
+    rf->ShowModal();
+    ui_a->refresh("Macierz A");
+    ui_b->refresh("Macierz B");
     event.Skip();
 }
 
@@ -306,19 +277,6 @@ void MainFrame::OnPrecision(wxCommandEvent& event)
     ui_b->setPrecision(precision);
 }
 
-/*
-void MainFrame::RefreshPrecision()
-{
-    ui_a->setPrecision(precision);
-    ui_b->setPrecision(precision);
-}
-
-void MainFrame::RefreshMatrixUI()
-{
-    ui_a->refresh(true);
-    ui_b->refresh(true);
-}*/
-
 void MainFrame::OnExit(wxCommandEvent& event)
 {
     Close( true );
@@ -327,12 +285,5 @@ void MainFrame::OnAbout(wxCommandEvent& event)
 {
     wxMessageBox( "Mini Kalkulator Macierzy v.1.0\nautor: Przemysław Kożuch\nStworzony z pomocą darmowej biblioteki wxWidgets.",
                   "O kalkulatorze", wxOK | wxICON_INFORMATION );
-    a_mat = Matrix(4,3);
-    a_mat.set(0,0,42);
-    event.Skip();
-}
-void MainFrame::OnHello(wxCommandEvent& event)
-{
-    wxLogMessage("DEBUG EVENT!");
     event.Skip();
 }

@@ -7,18 +7,19 @@ wxBEGIN_EVENT_TABLE(ResultFrame, wxDialog)
     EVT_BUTTON(ID_ReplaceB,      ResultFrame::OnReplaceClicked)
 wxEND_EVENT_TABLE()
 
-ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size,
-            Matrix &result, Matrix &a_mat, Matrix &b_mat, int precision)
-: wxDialog(parent, wxID_ANY, title, pos, size)
+ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint& pos, const wxSize& size, long style,
+            Matrix &result, Matrix &mat_a, Matrix &mat_b, int precision)
+: wxDialog(parent, wxID_ANY, title, pos, size, style)
 {
+    // OGÓLNE:
     this->result = &result;
-    this->a_mat = &a_mat;
-    this->b_mat = &b_mat;
+    this->mat_a = &mat_a;
+    this->mat_b = &mat_b;
     SetMinSize(wxSize(450, 200));
     wxPanel *mainPanel = new wxPanel(this);
     wxBoxSizer *mainLayout = new wxBoxSizer(wxVERTICAL);
     
-    // GRID
+    // MACIERZ (utworzenie elementów gui):
     wxPanel *gridPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition,wxSize(200,160));
     wxGridSizer *grid = new wxGridSizer(5,5,0,0);
     ui_matrix = new wxTextCtrl*[25];  
@@ -38,7 +39,7 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
     if(result.displayable()) infoT->SetLabelText("Macierz Wynikowa");
     else infoT->SetLabelText("Macierz Wynikowa - zbyt duża by wyświetlić");
 
-    // BUTTONS
+    // PRZYCISKI:
     wxPanel *buttonPanel = new wxPanel(mainPanel,wxID_ANY,wxDefaultPosition);//, wxPoint(200,50),wxSize(100,30)
     wxBoxSizer *buttonLayout = new wxBoxSizer(wxHORIZONTAL);
     wxButton *backBTN = new wxButton(buttonPanel,ID_Back,"Powrót");
@@ -52,14 +53,14 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
     buttonPanel->SetSizer(buttonLayout);
     buttonLayout->Layout();
 
-
+    // OKNO GŁÓWNE
     mainLayout->Add(gridPanel,1,wxEXPAND|wxALL,5);
     mainLayout->Add(infoT,0,wxEXPAND|wxLEFT|wxRIGHT,5);
     mainLayout->Add(buttonPanel,0,wxEXPAND|wxALL,5);
     mainPanel->SetSizer(mainLayout);
     mainLayout->Layout();
     
-
+    // MACIERZ (wpisanie danych):
     if(result.displayable())
     {
         for(int x = result.rows()-1; x >= 0; --x)
@@ -72,6 +73,8 @@ ResultFrame::ResultFrame(wxWindow *parent, const wxString& title, const wxPoint&
         }
     }
 }
+
+// ZDARZENIA:
 
 void ResultFrame::OnBackClicked(wxCommandEvent &event)
 {
@@ -102,16 +105,11 @@ void ResultFrame::OnReplaceClicked(wxCommandEvent &event)
 {
     if(event.GetId()==ID_ReplaceA)
     {
-        *this->a_mat = *this->result;
+        *(this->mat_a) = *(this->result);
     }
     else
     {
-        *this->b_mat = *this->result;
+        *(this->mat_b) = *(this->result);
     }
     Close( true );
 }
-
-
-
-
-

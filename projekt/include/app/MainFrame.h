@@ -18,21 +18,26 @@ class MainFrame: public wxFrame
 {
 public:
     MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
-    bool a_good, b_good;
-    Matrix a_mat = Matrix(5);
-    Matrix b_mat = Matrix(5);
-    UIMatrix *ui_a;
-    UIMatrix *ui_b;
-    Matrix result = Matrix(5);
-    int precision = 2;
-
 private:
+    // dane macierzy A (lewej)
+    Matrix mat_a = Matrix(5);
+    // dane macierzy B (prawej)
+    Matrix mat_b = Matrix(5);
+    // obiekt zawierający elementy interfejsu użytkownika związane z macierzą A
+    UIMatrix *ui_a;
+    // obiekt zawierający elementy interfejsu użytkownika związane z macierzą B
+    UIMatrix *ui_b;
+    // macierz będąca wynikiem działania
+    Matrix result = Matrix(5);
+    // precyzja wyświetlania wyniku
+    int precision = 2;
+    // często używana fraza przy wyświetlaniu komunikatu o błędnych danych
     const wxString nd = "Nieprawidłowe dane.";
 
-    void OnHello(wxCommandEvent& event);
+    // ZDARZENIA:
+
     void OnExit(wxCommandEvent& event);
     void OnAbout(wxCommandEvent& event);
-
     void OnNew(wxCommandEvent& event);
     void OnOpenFile(wxCommandEvent& event);
     void OnSaveFile(wxCommandEvent& event);
@@ -40,8 +45,6 @@ private:
     void OnOperation(wxCommandEvent& event);
     void OnPrecision(wxCommandEvent& event);
 
-    //void RefreshPrecision();
-    //void RefreshMatrixUI();
     wxDECLARE_EVENT_TABLE();
 };
 

@@ -8,7 +8,6 @@ Matrix::Matrix(const Matrix &m)
 {
     r = m.r;
     c = m.c;
-    //cout << "---kopiowanie---\n";
     data = new double*[r];
     for(int i = 0; i<r; i++)
     {
@@ -22,11 +21,8 @@ Matrix::Matrix(int rows, int cols)
 {
     if(rows<1||cols<1)
     {
-        //cout << "(!) Nieprawidlowa wartosc wierszy lub kolumn w czasie wykonywania konstruktora."<< endl;
-        //cout << "(!) Przerywanie pracy programu." << endl;
         exit(-1);
     }
-    
     r = rows;
     c = cols;
     data = new double*[rows];
@@ -173,7 +169,6 @@ bool Matrix::operator==(Matrix &m2)
     return false;
 }
 
-
 int Matrix::cols()
 {
     return c;
@@ -193,7 +188,6 @@ void Matrix::resize(int n, int m)
 {
     // r,c - w starej macierzy
     // n,m - w nowej macierzy
-    //if(this == &m2) return *this; // czy nie doszło do samoprzypisania
     double** newdata = new double*[n];
     for(int i = 0; i<n; i++)
     {
@@ -217,29 +211,12 @@ void Matrix::resize(int n, int m)
     c=m;
 }
 
-void Matrix::print()
-{
-    // zakomentowane linie dzialaly mi tylko na windowsie wiec postanowilem je zakomentowac
-    //cout << (char)218 << setw(W*c+1) << setfill(' ') << (char)191 << endl;
-    for(int i = 0; i<r; i++)//rows
-    {
-        //cout << (char)179;
-        for(int j = 0; j<c; j++)//columns
-        {
-            cout << setw(W) << data[i][j];
-        }
-        //cout << (char)179;
-        cout << endl;
-    }
-    //cout << (char)192 << setfill(' ') << setw(W*c+1) << (char)217 << endl;
-}
 
 void Matrix::save(string path)
 {
     fstream file;
     file.open(path, ios::out);
     if(!file) throw FileFailedToOpenException(path);
-        //cout << "(!) Nie mozna utworzyc pliku " << path << endl;
     file << r << ' ' << c << "\n";
     for(int i = 0; i<r; i++)//rows
     {
@@ -249,7 +226,6 @@ void Matrix::save(string path)
         }
         file << "\n";
     }
-    cout << "(i) Plik zapisano pomyslnie.\n";
     file.close();
 }
 
@@ -259,14 +235,14 @@ Matrix::Matrix(string path)
     file.open(path, ios::in);
     if(!file)
     {
-        cout << "(!) Nie mozna otworzyc pliku " << path << endl;
+        //cout << "(!) Nie mozna otworzyc pliku " << path << endl;
         exit(-11);
     }
     file >> r >> c;
     if(r<=0 || c<=0)
     {
-        cout << "(!) Plik " << path << " zawiera niepoprawne dane." << endl;
-        cout << "(!) Przerywanie pracy programu." << endl;
+        //cout << "(!) Plik " << path << " zawiera niepoprawne dane." << endl;
+        //cout << "(!) Przerywanie pracy programu." << endl;
         file.close();
         exit(-12);
     }
@@ -280,28 +256,14 @@ Matrix::Matrix(string path)
                 file >> data[i][j];
             else
             {
-                cout << "(!) Plik " << path << " zawiera niepoprawne dane." << endl;
-                cout << "(!) Przerywanie pracy programu." << endl;
+                //cout << "(!) Plik " << path << " zawiera niepoprawne dane." << endl;
+                //cout << "(!) Przerywanie pracy programu." << endl;
                 file.close();
                 exit(-13);
             }
         }
     }
-    cout << "(i) Plik odczytano pomyslnie.\n";
+    //cout << "(i) Plik odczytano pomyslnie.\n";
     file.close();
-}
-
-ostream& operator<<(ostream& ostr, const Matrix& mat)
-{
-    ostr << mat.r << ' ' << mat.c << "\n";
-    for(int i = 0; i<mat.r; i++)//rows
-    {
-        for(int j = 0; j<mat.c; j++)//columns
-        {
-            ostr << mat.data[i][j] << ' ';
-        }
-        ostr << "\n";
-    }
-    return ostr;
 }
 
